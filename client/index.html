@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vanilla Boilerplate</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+
+  <body>
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" id="btn-login">Moralis Metamask Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="btn-logout">Logout</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="btn-mint" onclick="mint()">Mint</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " id="btn-my" onclick="renderGame()">My mystic</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " id="btn-all" onclick="allMystics()">All mystics</a>
+      </li>
+    </ul>
+    
+    
+    
+    
+    
+    <div id="contentBody" class="container mt-5">
+      <div id="myAddress">
+      </div>
+
+      <div id="myMystics" class="row mt-1">
+      </div>
+
+      <div id="myEggs" class="mt-1">
+      </div>
+
+      <h2>Current invitation reproduce</h2>
+      
+      <div id="myCurrentInvit" class="row mt-5">
+      </div>
+
+      <h3>Historics invitation</h3>
+      <div id="myInvitsReceive" class="row mt-5">
+      </div>
+      <div id="myInvitsSended" class="row mt-1">
+      </div>
+    </div>
+    
+    
+
+    <script type="text/javascript" src="./main.js"></script>
+    <script type="text/javascript" src="./mystic.js"></script>
+    <script type="text/javascript" src="./reproduce.js"></script>
+  </body>
+</html>
