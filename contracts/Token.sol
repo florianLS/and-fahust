@@ -4,6 +4,9 @@ import '../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '../node_modules/@openzeppelin/contracts/access/Ownable.sol';
 
 contract Token is ERC721, Ownable{
+    /**
+    Ici on créer l'objet Token avec lequel on remplira des variables
+     */
     struct  Mystic {
         uint8 price;
         uint8 numberReproduce;
@@ -14,9 +17,9 @@ contract Token is ERC721, Ownable{
         uint256 createdAt;
     }
     
-    uint256 nextId = 1;
-    uint256 nbrMystic = 0;
-    uint256 balance = 0;
+    uint256 nextId = 1;//Le premier Id token et on incrémente a chaque création
+    uint256 nbrMystic = 0;//Le nombre total de token
+    uint256 balance = 0;//Le nombre d'eth envoyé sur le contrat
 
     mapping( uint256 => Mystic ) private _tokenDetails;
 
@@ -55,10 +58,17 @@ contract Token is ERC721, Ownable{
         }
     }
 
+    /**
+    Récupérer le token et ces variable grace a son token id
+     */
     function getTokenDetails(uint256 tokenId) public view returns (Mystic memory){
         return _tokenDetails[tokenId];
     }
 
+    /**
+    ça c'est pour modifier la variable qui contient le token id avec lequel le joueur veux reproduire son token
+    En vrai ont pourrais la bouger dans params ce sera plus leger pour le contrat
+     */
     function addSubInvitation(uint256 tokenId, uint8 tokenIdReproducable, bool add) public {
         if(ownerOf(tokenId) == msg.sender) _tokenDetails[tokenId].tokenIdReproducable = (add?tokenIdReproducable:0);
     }
@@ -130,6 +140,10 @@ contract Token is ERC721, Ownable{
         }
     }*/
 
+    /**
+    Fonction de transfer ou d'achat d'un token d'un compte user a un autre en passant par metamask, ultra secure
+    Et comme tu le vois au dessus, y avais les mêmes fonctions sauf que pour l'opti je les ai transformer en une fonction plus légère
+     */
     function purchaseAndTransfer(address contactAddr, uint256 tokenId, uint256 amount,bool purchase) external payable {
         balance = balance+msg.value;
         Mystic memory mystic = _tokenDetails[tokenId];
@@ -150,6 +164,9 @@ contract Token is ERC721, Ownable{
         _safeTransfer((purchase?contactAddr:msg.sender), (purchase?msg.sender:contactAddr), tokenId, "");
     }
 
+    /**
+    Modifier les paramètre d'un token en utilisant son id
+     */
     function params(uint256 tokenId,bool sellable,bool egg) public {
         require(ownerOf(tokenId) == msg.sender,"Not Your mystic");
         _tokenDetails[tokenId].inSell = sellable;

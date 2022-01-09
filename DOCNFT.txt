@@ -1,0 +1,16 @@
+Alors voila, on a d'un côter le serveur node JS que tu trouvera dans le dossier "server"
+Ensuite tu peut voir la partie front dans "client"
+
+Et surtout le smart contract, que tu modifie avec le fichier contracts/Token.sol
+
+Ensuite pour le lancer cela ce fais grace au fichier migrations/2_token_migration.js ,dedans je peut lancer des fonctions que j'ai créer dans le contract, genre mint, mint c'est le plus important, minté, c'est frappé, c'est donc créer un Jeton et l'assigner a quelqu'un.
+
+Je lance la création de mon contract avec cet commande : truffle migrate --network development --reset
+
+Comme je t'ai dis on met dans le contrat que ce qui est le plus important, donc mint, buy, transfer, reproduce (pour minter deux jetons quand deux user font "s'accoupler" leur nft, chacun récupère un oeuf qui est donc un token) et la functions params qui me permet de modifier certaines variable d'un token
+
+Pour mieux comprendre solidity voici des supers video simple sur les trucs de base a connaitre https://www.youtube.com/watch?v=xtEQGtaT9MY&list=PLBV4f2pTYexqgdiVpLOWlF-E5sTLPimot&index=1
+
+Pour faire des faux comptes avec genre 100 ETH utilise ganach, c'est trop bien
+
+Tu devra surtout comprendre ces variable ownerOf(), payable, uint8 , uint256, public view returns , memory
