@@ -173,7 +173,7 @@ contract Token is ERC721, Ownable{
     function params(uint256 tokenId,bool sellable,bool egg) public {
         require(ownerOf(tokenId) == msg.sender,"Not Your mystic");
         _tokenDetails[tokenId].inSell = sellable;
-        if(_tokenDetails[tokenId].egg != egg) _tokenDetails[tokenIdTwo].createdAt = block.timestamp;
+        if(_tokenDetails[tokenId].egg != egg) _tokenDetails[tokenId].createdAt = block.timestamp;
         _tokenDetails[tokenId].egg = egg;
     }
 
