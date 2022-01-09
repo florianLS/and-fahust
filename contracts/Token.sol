@@ -25,6 +25,9 @@ contract Token is ERC721, Ownable{
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol){ }
 
+    /**
+    Fonction de création de token
+     */
     function mint(uint8 price, uint8[] memory parts) public  {//onlyOwner
         _tokenDetails[nextId] = Mystic(price,0,parts,0,false,true,block.timestamp);
         _safeMint(msg.sender, nextId);

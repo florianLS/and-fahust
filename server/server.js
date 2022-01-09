@@ -12,7 +12,7 @@ function btw2v(val1,val2){//between two value
 var listConnection = {};
 var allUsers = {};
 var allMystics = {};
-var newMysticData = {exp:0,lvl:0,lastReproduction:dateNow}
+var newMysticData = {exp:0,lvl:0,lastReproduction:dateNow,hungry:0,}
 
 const express = require('express')
 const app = express()
