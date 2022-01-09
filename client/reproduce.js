@@ -3,17 +3,30 @@
    * @param {*} idTokenOne 
    */
    function reproduce(idTokenOne,idTokenTwo,addressTwo){
-     console.log(idTokenOne,idTokenTwo,addressTwo)
     getAbi().then((abi)=>{
-      let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);//0x400919F8f5740436d1A1769bC241477275C61545
-      contract.methods.reproduce([1,2,1,0,1,3], idTokenOne, [1,2,1,0,1,3], addressTwo, idTokenTwo).send({
-        from: ethereum.selectedAddress,
-        //gasPrice: '1',
-      }).catch((error)=>{console.log('error transfer',error)}).then((reproduceVar)=>{
-        console.log(reproduceVar)
-      }).then(()=>{
-        renderGame()
-      });
+      fetch('http://localhost:3000/acceptInvit', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "addrOne": ethereum.selectedAddress.toString(),"addrTwo": addressTwo.toString(),"idTokenOne":idTokenOne,"idTokenTwo":idTokenTwo})
+      }).then(res => res.json())
+        .then(res => {
+          //A REMETTRE APRES VALIDATION DU TEST
+          let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);//0x400919F8f5740436d1A1769bC241477275C61545
+          contract.methods.reproduce(res.egg1.parts, idTokenOne, res.egg2.parts, addressTwo, idTokenTwo).send({
+            from: ethereum.selectedAddress,
+            //gasPrice: '1',
+          }).catch((error)=>{console.log('error transfer',error)}).then((reproduceVar)=>{
+            console.log(reproduceVar)
+          }).then(()=>{
+            renderGame()
+          });
+
+
+        });
+      
     });
   }
 

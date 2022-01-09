@@ -12,7 +12,62 @@ function btw2v(val1,val2){//between two value
 var listConnection = {};
 var allUsers = {};
 var allMystics = {};
-var newMysticData = {exp:0,lvl:0,lastReproduction:dateNow,hungry:0,}
+var newMysticData = {
+    exp:0,
+    expMax:100,
+    lvl:0,
+    lastReproduction:Date.now(),
+
+    food:0,
+
+    hungry:100,
+    moral:100,
+    cleanliness:100,
+    rested:100,
+    life:100,
+    action:0//action du mystic 
+}
+
+/**
+ * Action de chaque mystic, toutes les heures
+ * pour plus d'opti quand il y en aura beaucoup le faire toutes les heures divisé par le nombre de mystic avec un id incremente de traitement
+ */
+setInterval(() => {
+    Object.keys(allMystics).forEach(mstc => {
+        if(life > 0){
+            if(allMystics[mstc].data.action == 0){// en attente
+                allMystics[mstc].data.hungry -= 1;
+                allMystics[mstc].data.cleanliness -= 1;
+                allMystics[mstc].data.rested -= 1;
+            }else if(allMystics[mstc].data.action == 1){// repos (ce fais automatiquement ou sur demande)
+                allMystics[mstc].data.hungry -= 0.5;
+                allMystics[mstc].data.cleanliness -= 0.5;
+                allMystics[mstc].data.rested += 1;
+            }else if(allMystics[mstc].data.action == 2){// cherche de la nourriture
+                allMystics[mstc].data.hungry -= 1.5;
+                allMystics[mstc].data.cleanliness -= 1;
+                allMystics[mstc].data.rested -= 1.5;
+                allMystics[mstc].data.food += Math.floor(btw2v(2,3)*(1+(allMystics[mstc].data.level/10)));
+            }else if(allMystics[mstc].data.action == 3){// s'entraine
+                allMystics[mstc].data.hungry -= 2;
+                allMystics[mstc].data.cleanliness -= 2;
+                allMystics[mstc].data.rested += 2;
+                allMystics[mstc].data.exp += 1;
+                if(allMystics[mstc].data.exp >= allMystics[mstc].data.expMax){
+                    allMystics[mstc].data.lvl++;
+                    allMystics[mstc].data.exp = 0;
+                    allMystics[mstc].data.expMax = allMystics[mstc].data.expMax*allMystics[mstc].data.lvl;
+                }
+            }
+    
+            if(allMystics[mstc].data.hungry <= 0){allMystics[mstc].data.hungry = 0;allMystics[mstc].data.life -= 1;}
+            if(allMystics[mstc].data.cleanliness <= 0){allMystics[mstc].data.cleanliness = 0;allMystics[mstc].data.life -= 1;}
+            if(allMystics[mstc].data.rested <= 0){allMystics[mstc].data.rested = 0;allMystics[mstc].data.life -= 1;allMystics[mstc].data.action = 1;}
+            fs.writeFile("mystics/"+mstc+".json", JSON.stringify(allMystics[mstc]), (err) => {if (err) throw err;});
+        }
+        
+    });
+}, 60000*60);//par minute
 
 const express = require('express')
 const app = express()
@@ -35,20 +90,6 @@ app.use(function (req, res, next) {
  * A la connection de l'user, enregistrer son mystic
  */
 app.post('/mint', (req, res) => {
-    
-    if (fs.existsSync("mystics/"+req.body.addr+".json")) {
-        fs.readFile("mystics/"+req.body.addr+".json", (err, data) => {
-            if (err) throw err;mystic = JSON.parse(data);
-            mysticTemp = {"mystic":req.body.mystic,"data":data.data,"addr":req.body.addr};
-            allMystics[req.body.addr] = mysticTemp
-            fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
-        });
-    }else{
-        dateNow = Date.now();
-        mysticTemp = {"mystic":req.body.mystic,"data":newMysticData,"addr":req.body.addr};
-        allMystics[req.body.addr] = mysticTemp
-        fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
-    }
 
     var invitsReceive = undefined;
     var invitsSended = undefined;
@@ -60,7 +101,21 @@ app.post('/mint', (req, res) => {
         invitsSended = JSON.parse(fs.readFileSync("invitations/sended/"+req.body.addr+".json"));
     }
     
-    res.send(JSON.stringify({invitsReceive:invitsReceive,invitsSended:invitsSended}));
+    if (fs.existsSync("mystics/"+req.body.addr+".json")) {
+        fs.readFile("mystics/"+req.body.addr+".json", (err, data) => {
+            if (err) throw err;mystic = JSON.parse(data);
+            mysticTemp = {"mystic":req.body.mystic,"data":mystic.data,"addr":req.body.addr};
+            allMystics[req.body.addr] = mysticTemp
+            fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
+            res.send(JSON.stringify({invitsReceive:invitsReceive,invitsSended:invitsSended,mystic:mysticTemp}));
+        });
+    }else{
+        mysticTemp = {"mystic":req.body.mystic,"data":newMysticData,"addr":req.body.addr};
+        allMystics[req.body.addr] = mysticTemp;
+        fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
+        res.send(JSON.stringify({invitsReceive:invitsReceive,invitsSended:invitsSended,mystic:mysticTemp}));
+    }
+    
 })
 
 /**
@@ -177,8 +232,8 @@ app.post('/acceptInvit', (req, res) => {
                 delete invit[req.body.addrTwo];
                 valid = true;
             } 
+            //A REMETTRE APRES TESTS
             fs.writeFile("invitations/receive/"+req.body.addrOne+".json", JSON.stringify(invit), (err) => {if (err) throw err;});
-            if(valid == true) res.send(JSON.stringify({"valid":req.body.addrOne}));
             reproduce(req,res);
         });
     }
@@ -237,14 +292,15 @@ app.post('/deleteInvitSended', (req, res) => {
     if (fs.existsSync("mystics/"+req.body.addrOne+".json")) {
         if (fs.existsSync("mystics/"+req.body.addrTwo+".json")) {
             fs.readFile("mystics/"+req.body.addrOne+".json", (err, data) => {
-                if (err) throw err;userOne = JSON.parse(data);
+                if (err) throw err;userOne = JSON.parse(data).mystic;
                 fs.readFile("mystics/"+req.body.addrTwo+".json", (err, data) => {
-                    if (err) throw err;userTwo = JSON.parse(data);
+                    if (err) throw err;userTwo = JSON.parse(data).mystic;
+                    //console.log('usertwo',userTwo)
                     //CREATE EGG
                     let egg1 = {"parts":[btw2v(userOne["parts"][0],userTwo["parts"][0]),btw2v(userOne["parts"][1],userTwo["parts"][1]),btw2v(userOne["parts"][2],userTwo["parts"][2]),btw2v(userOne["parts"][3],userTwo["parts"][3]),btw2v(userOne["parts"][4],userTwo["parts"][4]),btw2v(userOne["parts"][5],userTwo["parts"][5])]};
                     let egg2 = {"parts":[btw2v(userOne["parts"][0],userTwo["parts"][0]),btw2v(userOne["parts"][1],userTwo["parts"][1]),btw2v(userOne["parts"][2],userTwo["parts"][2]),btw2v(userOne["parts"][3],userTwo["parts"][3]),btw2v(userOne["parts"][4],userTwo["parts"][4]),btw2v(userOne["parts"][5],userTwo["parts"][5])]};
-
-                    res.send(JSON.stringify({"egg1":egg1,"egg1":egg2}));
+                    //console.log({"egg1":egg1,"egg2":egg2})
+                    res.send(JSON.stringify({"egg1":egg1,"egg2":egg2}));
                 });
             });
         }else{

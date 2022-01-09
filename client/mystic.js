@@ -33,8 +33,10 @@
     let abi = await getAbi();
     let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
     $("#myAddress").html(ethereum.selectedAddress)
-    
+    console.log(contract.methods.getAllTokensForUser)
     let mystics = await contract.methods.getAllTokensForUser(ethereum.selectedAddress).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)});
+    console.log('test')
+    console.log(mystics)
     var lastMystic=undefined;
     var lastIdMystic=undefined;
     $("#myMystics").html('');
@@ -49,7 +51,6 @@
           lastMystic = data;
           lastIdMystic = MSTC;
           myMysticId = MSTC;
-          $("#myMystics").html(renderMystic(MSTC,lastMystic,true,ethereum.selectedAddress));
         }
       });
     })
@@ -84,7 +85,7 @@
       $("#btn-all").addClass("active");
       var allMysticsRender = "";
       Object.keys(res).forEach((MSTC) => {
-          allMysticsRender += renderMystic(res[MSTC].mystic.id,res[MSTC].mystic,(parseInt(MSTC)==parseInt(ethereum.selectedAddress))?true:false,MSTC);
+          allMysticsRender += renderMystic(res[MSTC].mystic.id,res[MSTC],(parseInt(MSTC)==parseInt(ethereum.selectedAddress))?true:false,MSTC);
       })
       $("#myMystics").html(allMysticsRender);
     });
@@ -103,9 +104,10 @@
           'Accept': 'application/json, text/plain, */*',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "addr": ethereum.selectedAddress, "mystic": {createdAt:mystic.createdAt,invitsSended:mystic.invitsSended,numberReproduce:mystic.numberReproduce,parts:mystic.price,price:mystic.price,id:id,egg:mystic.egg,inSell:mystic.inSell}})
+        body: JSON.stringify({ "addr": ethereum.selectedAddress, "mystic": {createdAt:mystic.createdAt,invitsSended:mystic.invitsSended,numberReproduce:mystic.numberReproduce,parts:mystic.parts,price:mystic.price,id:id,egg:mystic.egg,inSell:mystic.inSell}})
       }).then(res => res.json())
       .then(res => {
+        $("#myMystics").html(renderMystic(id,res.mystic,true,ethereum.selectedAddress));
         $('#myInvitsSended').show("slow");
         renderInvits(res)
       });
@@ -199,8 +201,9 @@
    * @returns 
    */
   function renderMystic(id,data,owned,addr){
-    dataStringified = (JSON.stringify(data).replaceAll("\"", '%84'));
-    date = (new Date(data.createdAt* 1000));
+    console.log(data)
+    dataStringified = (JSON.stringify(data.mystic).replaceAll("\"", '%84'));
+    date = (new Date(data.mystic.createdAt* 1000));
     return '<div class="card mb-3 col m-1" style="width: 18rem;">'
       +'<div class="row g-0">'
         +'<div class="col-md-4">'
@@ -210,6 +213,24 @@
           +'<div class="card-body">'
             +'<h5 class="card-title">#'+id+'</h5>'
             +'<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>'
+            
+            
+            +'<div class="progress">'
+              +'<div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: '+data?.data?.hungry+'%" aria-valuenow="'+data?.data?.hungry+'" aria-valuemin="0" aria-valuemax="100"></div>'
+            +'</div>'
+            +'<div class="progress mt-2">'
+              +'<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: '+data?.data?.moral+'%" aria-valuenow="'+data?.data?.moral+'" aria-valuemin="0" aria-valuemax="100"></div>'
+            +'</div>'
+            +'<div class="progress mt-2">'
+              +'<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: '+data?.data?.cleanliness+'%" aria-valuenow="'+data?.data?.cleanliness+'" aria-valuemin="0" aria-valuemax="100"></div>'
+            +'</div>'
+            +'<div class="progress mt-2">'
+              +'<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: '+data?.data?.rested+'%" aria-valuenow="'+data?.data?.rested+'" aria-valuemin="0" aria-valuemax="100"></div>'
+            +'</div>'
+            +'<div class="progress mt-2">'
+              +'<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: '+data?.data?.life+'%" aria-valuenow="'+data?.data?.life+'" aria-valuemin="0" aria-valuemax="100"></div>'
+            +'</div>'
+
             +'<p class="card-text"><small class="text-muted">'+timeSince(date)+'</small></p>'
 
             +'<div class="btn-group">'
@@ -220,10 +241,10 @@
               +'<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>'
               +'<ul class="dropdown-menu">'
                 +(owned?'<li><a class="dropdown-item" href="#" onclick="transfer(`'+addr+'`)">Transfer</a></li>':'')
-                +(owned?(data.inSell?'<li><a class="dropdown-item inSell" href="#" onclick="params('+id+','+false+','+data.egg+')">Stop sell</a></li>':'<li><a class="dropdown-item inSell" href="#" onclick="params('+id+','+true+','+data.egg+')">Sell</a></li>'):'')
-                +(owned&&myMysticId==undefined?(data.egg?'<li class="born"><a class="dropdown-item" href="#" onclick="params('+id+','+data.inSell+','+false+')">Born</a></li>':''):'')
+                +(owned?(data.mystic.inSell?'<li><a class="dropdown-item inSell" href="#" onclick="params('+id+','+false+','+data.mystic.egg+')">Stop sell</a></li>':'<li><a class="dropdown-item inSell" href="#" onclick="params('+id+','+true+','+data.mystic.egg+')">Sell</a></li>'):'')
+                +(owned&&myMysticId==undefined?(data.mystic.egg?'<li class="born"><a class="dropdown-item" href="#" onclick="params('+id+','+data.mystic.inSell+','+false+')">Born</a></li>':''):'')
                 +(!owned?'<li><a class="dropdown-item" href="#" onclick="sendInvit('+id+',`'+addr+'`)">Invitation to reproduce</a></li>':'')
-                +(!owned&&data.inSell?'<li><a class="dropdown-item" href="#" onclick="buy(`'+addr+'`,`'+dataStringified+'`,'+id+')">Buy</a></li>':'')
+                +(!owned&&data.mystic.inSell?'<li><a class="dropdown-item" href="#" onclick="buy(`'+addr+'`,`'+dataStringified+'`,'+id+')">Buy</a></li>':'')
                 +'</ul>'
             +'</div>'
 
