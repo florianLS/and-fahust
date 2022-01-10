@@ -34,7 +34,7 @@ var newMysticData = {
  */
 setInterval(() => {
     Object.keys(allMystics).forEach(mstc => {
-        if(life > 0){
+        if(allMystics[mstc].data.life > 0){
             if(allMystics[mstc].data.action == 0){// en attente
                 allMystics[mstc].data.hungry -= 1;
                 allMystics[mstc].data.cleanliness -= 1;

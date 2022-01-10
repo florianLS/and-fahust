@@ -9,57 +9,95 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dust.css">
+    <link rel="stylesheet" href="healthbar.css">
   </head>
 
-  <body>
-    <ul class="nav nav-pills">
+  <body style='background-image: url("anime-forest-12.jpg");background-size: cover;background-repeat: no-repeat;width:100%;height: 100vh;'>
+   
+
+    <ul class="nav nav-pills" style=" background-color: rgba(30, 30, 30, 0.9)!important;">
       <li class="nav-item">
-        <a class="nav-link" aria-current="page" id="btn-login">Moralis Metamask Login</a>
+        <a class="nav-link" aria-current="page" id="btn-login" style="color:aliceblue">Moralis Metamask Login</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="btn-logout">Logout</a>
+        <a class="nav-link" id="btn-logout" style="color:aliceblue">Logout</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="btn-mint" onclick="mint()">Mint</a>
+        <a class="nav-link" id="btn-mint" onclick="mint()" style="color:aliceblue">Mint</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " id="btn-my" onclick="renderGame()">My mystic</a>
+        <a class="nav-link " id="btn-my" onclick="renderGame()" style="color:aliceblue">My mystic</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " id="btn-all" onclick="allMystics()">All mystics</a>
+        <a class="nav-link " id="btn-all" onclick="allMystics()" style="color:aliceblue">All mystics</a>
       </li>
     </ul>
     
-    
-    
-    
-    
-    <div id="contentBody" class="container mt-5">
-      <div id="myAddress">
+    <div style="position: absolute;display: none;" id="progress">
+      <div style="width:250px">
+        <div class="progress"><b class="progress__bar" data-type="life"><span class="progress__text">Progress: <em>0%</em></span></b></div>
       </div>
-
-      <div id="myMystics" class="row mt-1">
+      <div style="width:250px">
+        <div class="progress"><b class="progress__bar" data-type="hungry"><span class="progress__text">Progress: <em>0%</em></span></b></div>
       </div>
-
-      <div id="myEggs" class="mt-1">
+      <div style="width:250px">
+        <div class="progress"><b class="progress__bar" data-type="moral"><span class="progress__text">Progress: <em>0%</em></span></b></div>
       </div>
-
-      <h2>Current invitation reproduce</h2>
-      
-      <div id="myCurrentInvit" class="row mt-5">
+      <div style="width:250px">
+        <div class="progress"><b class="progress__bar" data-type="cleanliness"><span class="progress__text">Progress: <em>0%</em></span></b></div>
       </div>
-
-      <h3>Historics invitation</h3>
-      <div id="myInvitsReceive" class="row mt-5">
-      </div>
-      <div id="myInvitsSended" class="row mt-1">
+      <div style="width:250px">
+        <div class="progress"><b class="progress__bar" data-type="rested"><span class="progress__text">Progress: <em>0%</em></span></b></div>
       </div>
     </div>
+    
+    
+    
+    <div id="contentBody" class="container">
+
+
+      <div id="myMystics" class="row">
+      </div>
+
+      <div id="myEggs" style="display:none" >
+      </div>
+
+      <div style="display:none">
+        <div id="myCurrentInvit" class="row">
+        </div>
+
+        <h3>Historics invitation</h3>
+        <div id="myInvitsReceive" class="row">
+        </div>
+        <div id="myInvitsSended" class="row">
+        </div>
+      </div>
+    </div>
+
+
+     
+  <div id="nc-main" class="nc-main bg-cover bg-cc">
+
+    <div class="full-wh">
+    
+      <!-- STAR ANIMATION -->
+      <div class="bg-animation">
+        <div id='stars'></div>
+        <div id='stars2'></div>
+        <div id='stars3'></div>
+        <div id='stars4'></div>
+      </div><!-- / STAR ANIMATION -->
+
+    </div>
+  </div>
     
     
 
     <script type="text/javascript" src="./main.js"></script>
     <script type="text/javascript" src="./mystic.js"></script>
     <script type="text/javascript" src="./reproduce.js"></script>
+    <script type="text/javascript" src="./healthbar.js"></script>
   </body>
 </html>
