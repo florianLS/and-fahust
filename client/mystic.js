@@ -1,3 +1,9 @@
+var life = 0;
+var hungry = 0;
+var cleanliness = 0;
+var moral = 0;
+var rested = 0;
+
 /**
    * Créer un mystic de façon aléatoire et l'envoyé vers le contrat intélligent
    */
@@ -24,7 +30,7 @@
     $("#btn-all").show("slow");
     $("#contentBody").show("slow");
     $("#myMystics").hide("slow").show("slow")
-    $("#myEggs").show("slow")
+    //$("#myEggs").show("slow")
 
     navAllUnactive();
     $("#btn-my").addClass("active");
@@ -32,20 +38,16 @@
     window.web3 = await Moralis.Web3.enableWeb3();
     let abi = await getAbi();
     let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
-    $("#myAddress").html(ethereum.selectedAddress)
-    console.log(contract.methods.getAllTokensForUser)
     let mystics = await contract.methods.getAllTokensForUser(ethereum.selectedAddress).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)});
-    console.log('test')
-    console.log(mystics)
     var lastMystic=undefined;
     var lastIdMystic=undefined;
     $("#myMystics").html('');
     renderEggs = '';
     await mystics.forEach((MSTC) => {
       //error map viens d'ici
-      contract.methods.getTokenDetails(MSTC).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)}).then((data)=>{console.log(data)
+      contract.methods.getTokenDetails(MSTC).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)}).then((data)=>{
         if(data.egg==true){
-          if(renderEggs == '') renderEggs += '<h2>My Eggs</h2><div class="row">';
+          if(renderEggs == '') renderEggs += '<div class="row">';
           renderEggs += renderEgg(MSTC,data,true,ethereum.selectedAddress)
         }else{
           lastMystic = data;
@@ -109,6 +111,12 @@
       .then(res => {
         $("#myMystics").html(renderMystic(id,res.mystic,true,ethereum.selectedAddress));
         $('#myInvitsSended').show("slow");
+        
+        life = res.mystic.data.life;
+        hungry = res.mystic.data.hungry;
+        cleanliness = res.mystic.data.cleanliness;
+        moral = res.mystic.data.moral;
+        rested = res.mystic.data.rested;
         renderInvits(res)
       });
     }
@@ -201,13 +209,16 @@
    * @returns 
    */
   function renderMystic(id,data,owned,addr){
-    console.log(data)
     dataStringified = (JSON.stringify(data.mystic).replaceAll("\"", '%84'));
     date = (new Date(data.mystic.createdAt* 1000));
-    return '<div class="card mb-3 col m-1" style="width: 18rem;">'
+
+    return '<div class="mystic">'
+    +'<img src="ori.png" class="img-fluid rounded-start" alt="...">'
+    +'</div>';
+    /*return '<div class="card mb-3 col m-1" style="width: 18rem;" >'
       +'<div class="row g-0">'
         +'<div class="col-md-4">'
-        +  '<img src="#" class="img-fluid rounded-start" alt="...">'
+        +  '<img src="ori.png" class="img-fluid rounded-start" alt="...">'
         +'</div>'
         +'<div class="col-md-8">'
           +'<div class="card-body">'
@@ -251,8 +262,9 @@
           +'</div>'
         +'</div>'
       +'</div>'
-    +'</div>';
+    +'</div>';*/
     //$('#mystic_starvation_time').html(new Date((parseInt(data.lastMeal)+parseInt(data.endurance))*1000))
+    
   }
 
   /**
@@ -265,6 +277,7 @@
   function renderEgg(id,data,owned,addr){
     dataStringified = (JSON.stringify(data).replaceAll("\"", '%84'));
     date = (new Date(data.createdAt* 1000));
+    console.log(data)
     return '<div class="card mb-3 col m-1" style="width: 18rem;">'
       +'<div class="row g-0">'
         +'<div class="col-md-4">'
