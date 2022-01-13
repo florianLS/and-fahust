@@ -18,14 +18,23 @@ var newMysticData = {
     lvl:0,
     lastReproduction:Date.now(),
 
-    food:0,
+    foods:{},//objet a recuperer en cliquant sur la map (champi pomme)
 
     hungry:100,
     moral:100,
     cleanliness:100,
     rested:100,
     life:100,
-    action:0//action du mystic 
+    action:0,//action du mystic 
+
+    foodByZone:{
+        1:Date.now(),
+        2:Date.now(),
+        3:Date.now(),
+        4:Date.now(),
+        5:Date.now(),
+        6:Date.now(),
+    }
 }
 
 /**
@@ -39,19 +48,27 @@ setInterval(() => {
                 allMystics[mstc].data.hungry -= 1;
                 allMystics[mstc].data.cleanliness -= 1;
                 allMystics[mstc].data.rested -= 1;
+                allMystics[mstc].data.moral -= 0.1;
             }else if(allMystics[mstc].data.action == 1){// repos (ce fais automatiquement ou sur demande)
                 allMystics[mstc].data.hungry -= 0.5;
                 allMystics[mstc].data.cleanliness -= 0.5;
                 allMystics[mstc].data.rested += 1;
+                allMystics[mstc].data.moral += 0.1;
             }else if(allMystics[mstc].data.action == 2){// cherche de la nourriture
                 allMystics[mstc].data.hungry -= 1.5;
                 allMystics[mstc].data.cleanliness -= 1;
                 allMystics[mstc].data.rested -= 1.5;
-                allMystics[mstc].data.food += Math.floor(btw2v(2,3)*(1+(allMystics[mstc].data.level/10)));
-            }else if(allMystics[mstc].data.action == 3){// s'entraine
+                allMystics[mstc].data.foods += Math.floor(btw2v(2,3)*(1+(allMystics[mstc].data.level/10)));
+            }else if(allMystics[mstc].data.action == 3){// se lave
+                allMystics[mstc].data.hungry -= 1.5;
+                allMystics[mstc].data.cleanliness = 100;
+                allMystics[mstc].data.rested -= 1;
+                allMystics[mstc].data.action = 0;//fini de laver au bout d'une heure
+            }else if(allMystics[mstc].data.action == 4){// s'entraine
                 allMystics[mstc].data.hungry -= 2;
                 allMystics[mstc].data.cleanliness -= 2;
-                allMystics[mstc].data.rested += 2;
+                allMystics[mstc].data.rested -= 2;
+                allMystics[mstc].data.moral += 1;
                 allMystics[mstc].data.exp += 1;
                 if(allMystics[mstc].data.exp >= allMystics[mstc].data.expMax){
                     allMystics[mstc].data.lvl++;
@@ -60,9 +77,12 @@ setInterval(() => {
                 }
             }
     
+            if(allMystics[mstc].data.moral <= 0){allMystics[mstc].data.moral = 0;allMystics[mstc].data.life -= 0.1;}
             if(allMystics[mstc].data.hungry <= 0){allMystics[mstc].data.hungry = 0;allMystics[mstc].data.life -= 1;}
-            if(allMystics[mstc].data.cleanliness <= 0){allMystics[mstc].data.cleanliness = 0;allMystics[mstc].data.life -= 1;}
-            if(allMystics[mstc].data.rested <= 0){allMystics[mstc].data.rested = 0;allMystics[mstc].data.life -= 1;allMystics[mstc].data.action = 1;}
+            if(allMystics[mstc].data.cleanliness <= 0){allMystics[mstc].data.cleanliness = 0;allMystics[mstc].data.life -= 0.5;}
+            if(allMystics[mstc].data.rested <= 0){allMystics[mstc].data.rested = 0;allMystics[mstc].data.life -= 1;
+                if(allMystics[mstc].data.action == 0)allMystics[mstc].data.action = 2;
+            }
             fs.writeFile("mystics/"+mstc+".json", JSON.stringify(allMystics[mstc]), (err) => {if (err) throw err;});
         }
         
@@ -160,7 +180,6 @@ app.post('/mint', (req, res) => {
  * Recupere les data de tous les mystics
  */
 app.get('/getAllMystics', (req, res) => {
-    console.log('all',allMystics)
     res.send(JSON.stringify(allMystics))
 })
 
@@ -179,10 +198,73 @@ function partsPoints(part){//max 24
  * PARTIE RECHERCHE
  */
  app.post('/filterMystics', (req, res) => {
+    res.send(Object.keys(allMystics).filter(myst => {
+        var date = (new Date(allMystics[myst].mystic.createdAt* 1000));
+        var seconds = Math.floor((new Date() - date) / 1000);
+        month = seconds / 2592000;
+        return ((req.body.egg == true && allMystics[myst].mystic.egg == 1) || (req.body.egg == false && allMystics[myst].mystic.egg == 0)) &&
+        (req.body.parts[0] == undefined || (req.body.parts[0] != undefined && req.body.parts[0] == allMystics[myst].mystic.parts[0])) && //beak
+        (req.body.parts[1] == undefined || (req.body.parts[1] != undefined && req.body.parts[1] == allMystics[myst].mystic.parts[1])) && //eye
+        (req.body.parts[2] == undefined || (req.body.parts[2] != undefined && req.body.parts[2] == allMystics[myst].mystic.parts[2])) && //ears
+        (req.body.parts[3] == undefined || (req.body.parts[3] != undefined && req.body.parts[3] == allMystics[myst].mystic.parts[3])) && //horn
+        (req.body.parts[4] == undefined || (req.body.parts[4] != undefined && req.body.parts[4] == allMystics[myst].mystic.parts[4])) && //color
+        (req.body.parts[5] == undefined || (req.body.parts[5] != undefined && req.body.parts[5] == allMystics[myst].mystic.parts[5])) && //body
+        (req.body.breedCountMin == 0 || (req.body.breedCountMin != 0 && req.body.breedCountMin <= allMystics[myst].mystic.numberReproduce)) && //breedCountMin
+        (req.body.breedCountMax == 3 || (req.body.breedCountMax != 3 && req.body.breedCountMax >= allMystics[myst].mystic.numberReproduce)) && //breedCountMax
+        (req.body.ageMinMonth == 0 || (req.body.ageMinMonth != 0 && req.body.ageMinMonth <= month)) && //ageMinMonth
+        (req.body.ageMaxMonth == 12 || (req.body.ageMaxMonth != 12 && req.body.ageMaxMonth >= month))  //ageMaxMonth
+    }))
+})
+
+
+/**
+ * PARTIE ACTION
+ */
+ app.post('/action', (req, res) => {
     if (fs.existsSync("mystics/"+req.body.addr+".json")) {
         fs.readFile("mystics/"+req.body.addr+".json", (err, data) => {
-            if (err) throw err;messages = JSON.parse(data);
-            res.send(data);
+            if (err) throw err;mystic = JSON.parse(data);
+            mystic.data.action = req.body.action;
+            mysticTemp = {"mystic":mystic.mystic,"data":mystic.data,"addr":req.body.addr};
+            allMystics[req.body.addr] = mysticTemp
+            fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
+            res.send(mysticTemp);
+        });
+    }else{
+        res.send('User not exist!')
+    }
+})
+
+
+app.post('/feed', (req, res) => {
+    if (fs.existsSync("mystics/"+req.body.addr+".json")) {
+        fs.readFile("mystics/"+req.body.addr+".json", (err, data) => {
+            if (err) throw err;mystic = JSON.parse(data);
+            if(mystic.data.foods[req.body.food.id]){
+                mystic.data.hungry += req.body.food.value;
+                delete mystic.data.foods[req.body.food.id];
+            }
+            mysticTemp = {"mystic":mystic.mystic,"data":mystic.data,"addr":req.body.addr};
+            allMystics[req.body.addr] = mysticTemp
+            fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
+            res.send(mysticTemp);
+        });
+    }else{
+        res.send('User not exist!')
+    }
+})
+
+
+app.post('/pickFood', (req, res) => {
+    if (fs.existsSync("mystics/"+req.body.addr+".json")) {
+        fs.readFile("mystics/"+req.body.addr+".json", (err, data) => {
+            if (err) throw err;mystic = JSON.parse(data);
+            mystic.data.foodByZone[req.body.foodId] = Date.now();
+            mystic.data.foods[Date.now()] = req.body.food;
+            mysticTemp = {"mystic":mystic.mystic,"data":mystic.data,"addr":req.body.addr};
+            allMystics[req.body.addr] = mysticTemp
+            fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
+            res.send(mysticTemp);
         });
     }else{
         res.send('User not exist!')

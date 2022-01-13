@@ -28,7 +28,7 @@ update = function() {
   
   timer = setTimeout( function() {
 
-    if($("#contentBody").css("display")=="none"){$("#progress").hide("fast");}else{$("#progress").show("fast");}
+    if($("#contentBody").css("display")=="none"){$("#stats").fadeOut("fast");}else{$("#stats").fadeIn("fast");}
 
     $bar.each(function(){console.log(life)
         if($(this).data("type")=="life") percent = life;

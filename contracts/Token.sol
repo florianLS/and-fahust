@@ -10,14 +10,16 @@ contract Token is ERC721, Ownable{
     struct  Mystic {
         uint8 price;
         uint8 numberReproduce;
-        uint8[] parts;
         uint8 tokenIdReproducable;
+        uint8 mother;
+        uint8 father;
+        uint8[] parts;
         bool inSell;
         bool egg;
         uint256 createdAt;
     }
     
-    uint256 nextId = 1;//Le premier Id token et on incrémente a chaque création
+    uint256 nextId = 0;//Le premier Id token et on incrémente a chaque création
     uint256 nbrMystic = 0;//Le nombre total de token
     uint256 balance = 0;//Le nombre d'eth envoyé sur le contrat
 
@@ -29,7 +31,7 @@ contract Token is ERC721, Ownable{
     Fonction de création de token
      */
     function mint(uint8 price, uint8[] memory parts) public  {//onlyOwner
-        _tokenDetails[nextId] = Mystic(price,0,parts,0,false,true,block.timestamp);
+        _tokenDetails[nextId] = Mystic(price,0,0,0,0,parts,false,true,block.timestamp);
         _safeMint(msg.sender, nextId);
         nextId++;nbrMystic++;
     }
@@ -46,19 +48,19 @@ contract Token is ERC721, Ownable{
     faire l'aléatoire depuis le front et mêttre dans parts one et parts two
     */
     function reproduce( uint8[] memory partsOne, uint256 tokenIdOne, uint8[] memory partsTwo, address senderInvit, uint256 tokenIdTwo) public {
-        require(_tokenDetails[tokenIdOne].createdAt != 0,"Mystic not exist");
-        require(_tokenDetails[tokenIdTwo].createdAt != 0,"Mystic not exist");
+        require(_tokenDetails[tokenIdOne].createdAt != 0 && _tokenDetails[tokenIdTwo].createdAt != 0,"Mystic not exist");
+        require((tokenIdOne != _tokenDetails[tokenIdTwo].mother && tokenIdOne != _tokenDetails[tokenIdTwo].father && tokenIdTwo != _tokenDetails[tokenIdOne].mother && tokenIdOne != _tokenDetails[tokenIdOne].father && _tokenDetails[tokenIdOne].father != _tokenDetails[tokenIdTwo].father && _tokenDetails[tokenIdOne].father != _tokenDetails[tokenIdTwo].mother && _tokenDetails[tokenIdOne].mother != _tokenDetails[tokenIdTwo].father && _tokenDetails[tokenIdOne].mother != _tokenDetails[tokenIdTwo].mother) || (_tokenDetails[tokenIdTwo].mother == 0 && _tokenDetails[tokenIdTwo].father == 0 && _tokenDetails[tokenIdOne].mother == 0 && _tokenDetails[tokenIdOne].father == 0) ,"Parently too close");
+        require(_tokenDetails[tokenIdTwo].tokenIdReproducable == tokenIdOne && ownerOf(tokenIdOne) == msg.sender && ownerOf(tokenIdTwo) == senderInvit && _tokenDetails[tokenIdTwo].numberReproduce < 3 && _tokenDetails[tokenIdOne].numberReproduce < 3 ,"Too many reproduce time");
+        //require(_tokenDetails[tokenIdTwo].createdAt != 0,"Mystic not exist");
         
-        if(_tokenDetails[tokenIdTwo].tokenIdReproducable == tokenIdOne && ownerOf(tokenIdOne) == msg.sender && ownerOf(tokenIdTwo) == senderInvit && _tokenDetails[tokenIdTwo].numberReproduce < 3 && _tokenDetails[tokenIdOne].numberReproduce < 3 ){
-            _tokenDetails[nextId] = Mystic(_tokenDetails[tokenIdOne].price,_tokenDetails[tokenIdOne].numberReproduce+1,partsOne,0,false,true,block.timestamp);
-            _safeMint(msg.sender, nextId);
-            nextId++;
+        _tokenDetails[nextId] = Mystic(_tokenDetails[tokenIdOne].price,_tokenDetails[tokenIdOne].numberReproduce+1,0,0,0,partsOne,false,true,block.timestamp);
+        _safeMint(msg.sender, nextId);
+        nextId++;
 
-            _tokenDetails[nextId] = Mystic(_tokenDetails[tokenIdTwo].price,_tokenDetails[tokenIdTwo].numberReproduce+1,partsTwo,0,false,true,block.timestamp);
-            _safeMint(senderInvit, nextId);
-            nextId++;
-            _tokenDetails[tokenIdTwo].tokenIdReproducable = 0;
-        }
+        _tokenDetails[nextId] = Mystic(_tokenDetails[tokenIdTwo].price,_tokenDetails[tokenIdTwo].numberReproduce+1,0,0,0,partsTwo,false,true,block.timestamp);
+        _safeMint(senderInvit, nextId);
+        nextId++;
+        _tokenDetails[tokenIdTwo].tokenIdReproducable = 0;
     }
 
     /**
@@ -66,14 +68,6 @@ contract Token is ERC721, Ownable{
      */
     function getTokenDetails(uint256 tokenId) public view returns (Mystic memory){
         return _tokenDetails[tokenId];
-    }
-
-    /**
-    ça c'est pour modifier la variable qui contient le token id avec lequel le joueur veux reproduire son token
-    En vrai ont pourrais la bouger dans params ce sera plus leger pour le contrat
-     */
-    function addSubInvitation(uint256 tokenId, uint8 tokenIdReproducable, bool add) public {
-        if(ownerOf(tokenId) == msg.sender) _tokenDetails[tokenId].tokenIdReproducable = (add?tokenIdReproducable:0);
     }
 
     function getAllTokensForUser(address user) public view returns (uint256[] memory){
@@ -152,8 +146,8 @@ contract Token is ERC721, Ownable{
         Mystic memory mystic = _tokenDetails[tokenId];
         if(amount != 0) require(msg.value >= mystic.price * amount, "Insufficient fonds sent");
         require(ownerOf(tokenId) != (purchase?msg.sender:contactAddr), "Already Owned");
-        uint256 tokenCount = balanceOf((purchase?msg.sender:contactAddr));
-        uint[] memory result = new uint256[](tokenCount);
+        //uint256 tokenCount = balanceOf((purchase?msg.sender:contactAddr));
+        //uint[] memory result = new uint256[](tokenCount);
         uint256 totalMystics = nextId;
         uint256 resultIndex = 0;
         uint256 i;
@@ -167,14 +161,24 @@ contract Token is ERC721, Ownable{
         _safeTransfer((purchase?contactAddr:msg.sender), (purchase?msg.sender:contactAddr), tokenId, "");
     }
 
+
+    /**
+    ça c'est pour modifier la variable qui contient le token id avec lequel le joueur veux reproduire son token
+    En vrai ont pourrais la bouger dans params ce sera plus leger pour le contrat
+     */
+    // function addSubInvitation(uint256 tokenId, uint8 tokenIdReproducable, bool add) public {
+    //     if(ownerOf(tokenId) == msg.sender) _tokenDetails[tokenId].tokenIdReproducable = (add?tokenIdReproducable:0);
+    // }
+
     /**
     Modifier les paramètre d'un token en utilisant son id
      */
-    function params(uint256 tokenId,bool sellable,bool egg) public {
+    function paramsMystic(uint256 tokenId,bool sellable,bool egg, uint8 tokenIdReproducable) public {
         require(ownerOf(tokenId) == msg.sender,"Not Your mystic");
         _tokenDetails[tokenId].inSell = sellable;
         if(_tokenDetails[tokenId].egg != egg) _tokenDetails[tokenId].createdAt = block.timestamp;
         _tokenDetails[tokenId].egg = egg;
+        _tokenDetails[tokenId].tokenIdReproducable = tokenIdReproducable;
     }
 
 }

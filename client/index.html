@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Vanilla Boilerplate</title>
+    <title>Mystic Web3 - Tamable crypto-nft-creature</title>
+    <meta name="description" content="Mystic Web3 is a play to ean website qui vous permet d'apprivoiser des créatures magiques dans un monde fantaisiste, chaque créature est un nft, reproductible avec d'autres utilisateurs.">
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
     
@@ -9,95 +10,150 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="dust.css">
-    <link rel="stylesheet" href="healthbar.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dust.css">
+    <link rel="stylesheet" href="css/healthbar.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/neon.css">
+    <link href="http://fonts.cdnfonts.com/css/alice-in-wonderland" rel="stylesheet">
   </head>
 
-  <body style='background-image: url("anime-forest-12.jpg");background-size: cover;background-repeat: no-repeat;width:100%;height: 100vh;'>
-   
+  <body style='background-image: url("img/anime-forest-12.jpg");background-size: cover;background-repeat: no-repeat;width:100%;height: 100vh;'>
 
-    <ul class="nav nav-pills" style=" background-color: rgba(30, 30, 30, 0.9)!important;">
-      <li class="nav-item">
-        <a class="nav-link" aria-current="page" id="btn-login" style="color:aliceblue">Moralis Metamask Login</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="btn-logout" style="color:aliceblue">Logout</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="btn-mint" onclick="mint()" style="color:aliceblue">Mint</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link " id="btn-my" onclick="renderGame()" style="color:aliceblue">My mystic</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link " id="btn-all" onclick="allMystics()" style="color:aliceblue">All mystics</a>
-      </li>
-    </ul>
-    
-    <div style="position: absolute;display: none;" id="progress">
-      <div style="width:250px">
-        <div class="progress"><b class="progress__bar" data-type="life"><span class="progress__text">Progress: <em>0%</em></span></b></div>
-      </div>
-      <div style="width:250px">
-        <div class="progress"><b class="progress__bar" data-type="hungry"><span class="progress__text">Progress: <em>0%</em></span></b></div>
-      </div>
-      <div style="width:250px">
-        <div class="progress"><b class="progress__bar" data-type="moral"><span class="progress__text">Progress: <em>0%</em></span></b></div>
-      </div>
-      <div style="width:250px">
-        <div class="progress"><b class="progress__bar" data-type="cleanliness"><span class="progress__text">Progress: <em>0%</em></span></b></div>
-      </div>
-      <div style="width:250px">
-        <div class="progress"><b class="progress__bar" data-type="rested"><span class="progress__text">Progress: <em>0%</em></span></b></div>
-      </div>
-    </div>
+    <nav>
+      <ul class="nav nav-pills" style=" background-color: rgba(30, 30, 30, 0.9)!important;">
+        <li class="nav-item unlogged-btn">
+          <a class="nav-link" aria-current="page" id="btn-login" style="color:aliceblue">Metamask Login</a>
+        </li>
+        <li class="nav-item logged-btn" style="display:none;">
+          <a class="nav-link" id="btn-logout" style="color:aliceblue">Logout</a>
+        </li>
+        <li class="nav-item logged-btn" style="display:none;">
+          <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-my" onclick="myMysticModal()" style="color:aliceblue">My mystic</a>
+        </li>
+        <li class="nav-item logged-btn" style="display:none;">
+          <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-all" onclick="allMystics()" style="color:aliceblue">All mystics</a>
+        </li>
+        <li class="nav-item logged-btn" style="display:none;">
+          <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-all" onclick="renderInvits()" style="color:aliceblue">Invitations</a>
+        </li>
+        <li class="nav-item logged-btn" style="display:none;">
+          <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-all" onclick="allEggs()" style="color:aliceblue">Eggs</a>
+        </li>
+      </ul>
+    </nav>
+
+
     
     
     
-    <div id="contentBody" class="container">
+    <main id="contentBody" class="container">
+
+      <section id="event-clickable">
+
+          <h1 id="title-mystic" style="display: none;">Mystic</h1>
+          <h2 id="subtitle-mystic" style="display: none;">Tamable crypto-nft-creature</h2>
+          <h4 class="text-light left-up" style="display: none;">
+            Breeding mystical creatures</br>From egg to adult, feed them</br>Protect them
+          </h4>
+          <h4 class="text-light right-middle" style="display: none;">
+            Maximum security</br>Developed with blockchain </br>and web3 technologies
+          </h4>
+          <h4 class="text-light left-down" style="display: none;">
+            Buy your first eggs now</br> And discover the joy of taming an NFT
+          </h4>
+          <a data-toggle="modal" data-target="#Modal" style="padding: 0px 0px 0px 0px;" onclick="modalBuy()" >
+            <img src="img/egg.png" class="egg-center" alt="egg">
+          </a>
 
 
-      <div id="myMystics" class="row">
-      </div>
+        <img src="img/nest.png" id="nest-egg" alt="nest">
+        <img src="img/mailbox.png" id="mail-box" alt="mailbox">
+        <img src="img/#" alt="apple" style="position: absolute;display: none;top:10vh;left:10vw" onclick="pickFood('apple',1,1)" class="pop-food" data-zone="1"></div>
+        <img src="img/#" alt="apple" style="position: absolute;display: none;top:15vh;left:25vw" onclick="pickFood('apple',1,2)" class="pop-food" data-zone="2"></div>
+        <img src="img/#" alt="apple" style="position: absolute;display: none;top:10vh;left:30w" onclick="pickFood('apple',1,3)" class="pop-food" data-zone="3"></div>
+        <img src="img/#" alt="mushroom" style="position: absolute;display: none;top:15vh;right:10vw" onclick="pickFood('mushroom',2,4)" class="pop-food" data-zone="4"></div>
+        <img src="img/#" alt="mushroom" style="position: absolute;display: none;top:10vh;right:25vw" onclick="pickFood('mushroom',2,5)" class="pop-food" data-zone="5"></div>
+        <img src="img/#" alt="mushroom" style="position: absolute;display: none;top:15vh;right:30vw" onclick="pickFood('mushroom',2,6)" class="pop-food" data-zone="6"></div>
+      </section>
+      
+      <!--<section style="position: absolute;display: none;" id="stats">
+        <div style="width:250px">
+          <div class="progress"><b class="progress__bar" data-type="life"><span class="progress__text">Progress: <em>0%</em></span></b></div>
+        </div>
+        <div style="width:250px">
+          <div class="progress"><b class="progress__bar" data-type="hungry"><span class="progress__text">Progress: <em>0%</em></span></b></div>
+        </div>
+        <div style="width:250px">
+          <div class="progress"><b class="progress__bar" data-type="moral"><span class="progress__text">Progress: <em>0%</em></span></b></div>
+        </div>
+        <div style="width:250px">
+          <div class="progress"><b class="progress__bar" data-type="cleanliness"><span class="progress__text">Progress: <em>0%</em></span></b></div>
+        </div>
+        <div style="width:250px">
+          <div class="progress"><b class="progress__bar" data-type="rested"><span class="progress__text">Progress: <em>0%</em></span></b></div>
+        </div>
+      </section>-->
 
-      <div id="myEggs" style="display:none" >
-      </div>
+      <section id="myMystics" class="row">
+      </section>
 
-      <div style="display:none">
+      <!--<section id="myEggs" >
+      </section>
+
+      <section id="invitation">
         <div id="myCurrentInvit" class="row">
         </div>
 
-        <h3>Historics invitation</h3>
-        <div id="myInvitsReceive" class="row">
-        </div>
-        <div id="myInvitsSended" class="row">
-        </div>
+      </section>-->
+
+    </main>
+
+
+    <div id="nc-main" class="nc-main bg-cover bg-cc">
+
+      <div class="full-wh">
+      
+        <!-- STAR ANIMATION -->
+        <div class="bg-animation">
+          <div id='stars'></div>
+          <div id='stars2'></div>
+          <div id='stars3'></div>
+          <div id='stars4'></div>
+        </div><!-- / STAR ANIMATION -->
+
       </div>
     </div>
 
 
-     
-  <div id="nc-main" class="nc-main bg-cover bg-cc">
-
-    <div class="full-wh">
     
-      <!-- STAR ANIMATION -->
-      <div class="bg-animation">
-        <div id='stars'></div>
-        <div id='stars2'></div>
-        <div id='stars3'></div>
-        <div id='stars4'></div>
-      </div><!-- / STAR ANIMATION -->
+<!-- CONTACT MODAL	 -->
 
+  <!-- Modal -->
+  <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="exampleModalLabel">Modal Title</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
-    
+</div>
     
 
-    <script type="text/javascript" src="./main.js"></script>
-    <script type="text/javascript" src="./mystic.js"></script>
-    <script type="text/javascript" src="./reproduce.js"></script>
-    <script type="text/javascript" src="./healthbar.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/mystic.js"></script>
+    <script type="text/javascript" src="js/reproduce.js"></script>
+    <script type="text/javascript" src="js/healthbar.js"></script>
+    <script type="text/javascript" src="js/modal.js"></script>
   </body>
 </html>
