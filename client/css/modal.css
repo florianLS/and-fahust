@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,700');
+/* navbar styling */
+.navbar{
+	background-color: #1D1309 !important;
+}
+.navbar-brand{
+	color: #FDD459 !important;
+}
+.navbar-toggler {
+	background-color: #FDD459 !important;
+}
+.navbar-nav .nav-item{
+	color: #fff9b4 !important;
+}
+
+/* button animation */
+.btnContainer{
+	display: flex;
+	flex-direction: column;
+	max-width: 300px;
+	margin: auto;
+	align-items: center;
+	margin-top: 30.5vh;
+}
+.fadeInUpBig{
+	animation-delay: .5s;
+	animation-duration: .7s;
+	animation-timing-function: cubic-bezier(.08,.81,.55,.89);
+	background: #1D1309 !important;
+	border: 1px solid rgba(253, 212, 89,0);
+	color: rgb(253,212,89);
+	margin: 4px 0 0 0;
+	padding: .5em;
+	width: 240px;
+}
+.fadeInUpBig:hover{
+	color: white;
+}
+/* background image styling for responsive screen cover */
+.bg {
+	filter: contrast(70%) brightness(70%);
+  position: fixed; 
+  z-index: -1;
+  top: -50%; 
+  left: -50%; 
+  width: 200%; 
+  height: 200%;
+}
+.bgImage {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  margin: auto; 
+  min-width: 50%;
+  min-height: 50%;
+}
+
+/* header styling */
+#head{
+	color: white;
+	background-color: rgba(255,255,255,0) !important;
+	text-align: center;
+	width: 300px ;
+}
+
+/* icon styling */
+.hiddenContainer{
+	text-align: left;
+	border-radius: .25rem;
+	color: #fffdea;
+}
+.hiddenContainer div{
+	padding: .5em;
+	border-radius: .25rem;
+	
+}
+a{
+	color: #FDD459;
+	text-decoration: none;
+	padding: 8px 15px 8px 15px;
+	border-radius: 2px;
+}
+a:hover{
+	color: white;
+	text-decoration: none;
+	box-shadow: 1px 1px 5px #FDD459;
+}
+#about{
+	font-family: Raleway;
+	letter-spacing: 2px;
+	font-weight: 300;
+	cursor: default;
+	padding: 5px;
+	text-align: left;
+	top: 17vh;
+}
+#about h1{
+	font-size: 1.3rem;
+}
+
+/* modal styling */
+.modal-content{
+	background-color: rgb(29, 19, 9);
+	color: #FDD459;
+	box-shadow: 0px 0px 8px rgba(253, 212, 89,.7);
+	box-shadow: 0px 0px 16px rgba(253, 212, 89,.3);
+}
+.close{
+	text-shadow: none;
+}
+.modal-header{
+	border-bottom: 1px solid rgba(233,192,69, 1);
+}
+.modal-footer{
+	border: none;
+}
+.modal-close{
+	background-color: rgb(253, 212, 89) !important;
+	color: rgb(29, 19, 9);
+}
+.modal-close:hover{
+	box-shadow: 0px 0px 7px rgba(253, 222, 99,1);
+	color: rgb(29, 19, 9);
+	font-weight: 500;
+}
+/* styling for headers in about me */
+/* work on cleaning up this animation - but it's close now */
+.fadeIntoView{
+	font-size: 2.6rem !important;
+	transition: all .7s ease-in-out .1s;
+}
+.close{
+	color: rgb(253, 222, 99);
+}
+.close:hover{
+	color: white;
+}
+
+/* projects & iframe styling */
+.projectsContainer{
+	display: flex;
+	flex-direction: column;
+	margin: 0 auto;
+	font-family: Raleway;
+}
+.projectsContainer .btn{
+	font-weight: 700;
+}
+iframe{
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+/* phone screen styling */
+@media screen and (max-width: 450px){
+	#about{
+	left: calc(50vw - 120px);
+	top: 66px;
+	font-size: 14px;
+	width: 240px;
+	}
+	.btnContainer{
+		margin-top: 35vh;
+	}		
+}
+
+/* making underline animation */
+.addBorderBottom{
+	height: 1.2px;
+	background-color: rgba(233,192,69, 1);
+	padding: 0 !important;
+  animation: borderAnimation 3s 1s 1 forwards;
+}
+@keyframes borderAnimation {
+	0%{
+		width: 1%;
+	}
+	100%{
+		width: 70%;
+	}
+}
+
+.modal-dialog {
+    max-width: 80vw;
+    margin: 1.75rem auto;
+}

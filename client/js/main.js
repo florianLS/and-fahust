@@ -2,21 +2,17 @@
 //Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
 const serverUrl = "https://devnihk4zwc7.usemoralis.com:2053/server";
 const appId = "YsHmEnYCWJrVMysXSmrdIwsp0MJsna1K0bsXgben";
-const CONTRACT_ADDRESS = "0x16d723954c5F4a7a7c0Ce7b1a3F3f1509C56bd25";//0x16d723954c5F4a7a7c0Ce7b1a3F3f1509C56bd25
+const CONTRACT_ADDRESS = "0x0E4b1c41BE7bf52f2C8472EAeae63999350Dd045";
 
 var myMysticId = undefined;
-
+console.log(window.web3)
 startMain();
 
 
 function startMain(){
   Moralis.start({ serverUrl, appId });
 
-  $("#btn-transfer").hide("slow");
-  $("#btn-logout").hide("slow");
-  $("#btn-my").hide("slow");
-  $("#btn-all").hide("slow");
-  $("#contentBody").hide("slow");
+  $("#contentBody").fadeOut("slow");
 
   document.getElementById("btn-login").onclick = login;
   document.getElementById("btn-logout").onclick = logOut;
@@ -52,11 +48,10 @@ function startMain(){
    */
   async function logOut() {
     await Moralis.User.logOut();
-    $("#btn-login").show("slow");
-    $("#btn-logout").hide("slow");
-    $("#btn-my").hide("slow");
-    $("#btn-all").hide("slow");
-    $("#contentBody").hide("slow");
+    $(".unlogged-btn").fadeIn("slow");
+    $(".logged-btn").fadeOut("slow");
+
+    $("#contentBody").fadeOut("slow");
     $("#myMystics").html('');
   }
 
@@ -71,7 +66,7 @@ function startMain(){
    */
   function getAbi(){
     return new Promise((res)=>{
-      $.getJSON("Token.json",((json)=>{
+      $.getJSON("js/Token.json",((json)=>{
         res(json.abi)
       }))
     })

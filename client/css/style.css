@@ -1,0 +1,104 @@
+.card{
+    background-color: rgba(255, 255, 255, .5)!important;
+}
+
+.mystic{
+    width: 300px;
+    height: 300px;
+    
+    position: absolute;
+    top:50vh;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    margin: auto;
+}
+
+#nest-egg{
+    width: 100px;
+    height: 100px;
+    
+    position: absolute;
+    bottom: 5vh;
+    right: 40vh;
+    
+    margin: auto;
+    display: none;
+}
+
+#mail-box{
+    width: 200px;
+    height: 200px;
+    
+    position: absolute;
+    bottom: 5vh;
+    left: 40vh;
+    
+    margin: auto;
+    display: none;
+}
+
+.text-light{
+    color:white;
+    font-family: 'Alice in Wonderland', sans-serif;
+    font-size: 36px;
+    text-shadow: black 1px 0 10px;
+}
+
+#title-mystic{
+    font-family: 'Alice in Wonderland', sans-serif;
+    font-size: 80px;
+    position: absolute;
+    top:0vh;
+    color:white!important;
+    text-align:center;
+    left:0;
+    right:0;
+    text-shadow: black 1px 0 10px;
+}
+
+#subtitle-mystic{
+    font-family: 'Alice in Wonderland', sans-serif;
+    font-size: 50px;
+    position: absolute;
+    top:20vh;
+    color:white!important;
+    text-align:center;
+    left:0;
+    right:0;
+    text-shadow: black 1px 0 10px;
+}
+
+.left-up{
+    position: absolute;
+    top: 35vh;
+    text-align: start;
+}
+
+.right-middle{
+    position: absolute;
+    right: 20vh;
+    top: 50vh;
+    text-align: end;
+}
+
+.left-down{
+    position: absolute;
+    bottom: 5vh;
+    text-align: start;
+}
+
+.egg-center{
+    width: 400px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.title-first-egg{
+    text-align:center;
+    font-size: 30px;;
+}
