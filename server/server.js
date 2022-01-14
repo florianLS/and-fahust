@@ -18,7 +18,10 @@ var newMysticData = {
     lvl:0,
     lastReproduction:Date.now(),
 
-    foods:{},//objet a recuperer en cliquant sur la map (champi pomme)
+    foods:{
+        "apple":0,
+        "mushroom":0
+    },//objet a recuperer en cliquant sur la map (champi pomme)
 
     hungry:100,
     moral:100,
@@ -228,7 +231,7 @@ function partsPoints(part){//max 24
             mysticTemp = {"mystic":mystic.mystic,"data":mystic.data,"addr":req.body.addr};
             allMystics[req.body.addr] = mysticTemp
             fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
-            res.send(mysticTemp);
+            res.send(JSON.stringify(mysticTemp));
         });
     }else{
         res.send('User not exist!')
@@ -240,9 +243,10 @@ app.post('/feed', (req, res) => {
     if (fs.existsSync("mystics/"+req.body.addr+".json")) {
         fs.readFile("mystics/"+req.body.addr+".json", (err, data) => {
             if (err) throw err;mystic = JSON.parse(data);
-            if(mystic.data.foods[req.body.food.id]){
+            console.log(mystic.data.foods[req.body.food])
+            if(mystic.data.foods[req.body.food]>0){
                 mystic.data.hungry += req.body.food.value;
-                delete mystic.data.foods[req.body.food.id];
+                mystic.data.foods[req.body.food]--;
             }
             mysticTemp = {"mystic":mystic.mystic,"data":mystic.data,"addr":req.body.addr};
             allMystics[req.body.addr] = mysticTemp
@@ -260,7 +264,7 @@ app.post('/pickFood', (req, res) => {
         fs.readFile("mystics/"+req.body.addr+".json", (err, data) => {
             if (err) throw err;mystic = JSON.parse(data);
             mystic.data.foodByZone[req.body.foodId] = Date.now();
-            mystic.data.foods[Date.now()] = req.body.food;
+            mystic.data.foods[req.body.food.name]++;
             mysticTemp = {"mystic":mystic.mystic,"data":mystic.data,"addr":req.body.addr};
             allMystics[req.body.addr] = mysticTemp
             fs.writeFile("mystics/"+req.body.addr+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});

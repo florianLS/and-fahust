@@ -12,7 +12,7 @@ startMain();
 function startMain(){
   Moralis.start({ serverUrl, appId });
 
-  $("#contentBody").fadeOut("slow");
+  //$("#contentBody").fadeOut("slow");
 
   document.getElementById("btn-login").onclick = login;
   document.getElementById("btn-logout").onclick = logOut;
@@ -24,6 +24,10 @@ function startMain(){
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+  function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
   /**
    * Login 
