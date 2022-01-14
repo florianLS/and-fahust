@@ -31,6 +31,18 @@
        display: inline;
        padding:1rem;
    }
+   p{
+       font-size: 34px!important;
+   }
+   h2{
+       font-size: 60px!important;
+   }
+   h3{
+       font-size: 44px!important;
+   }
+   button{
+       font-size: 30px!important;
+   }
 }
  .card {
 	 position: relative;
@@ -47,6 +59,8 @@
  @media (min-width: 600px) {
 	 .card {
 		 height: 350px;
+         margin-top:50px;
+         margin-bottom:50px;
 	}
 }
  .card:before {
@@ -75,7 +89,7 @@
 	 transition: transform calc(var(--d) * 2) var(--e);
 }
  .card-first {
-	 background-image: url("../img/eggcard.jpg");
+	 background-image: url("../img/gate.jpg");
      background-position: center;
      background-size: cover;
 }

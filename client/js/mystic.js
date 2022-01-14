@@ -11,6 +11,25 @@ var invitsReceive = undefined;
 var invitsSended = undefined;
 var foodByZone = undefined;
 var myMysticData = undefined;
+var priceEth = 0;
+
+
+fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR', {
+  method: 'get',
+  headers: {
+    'Accept': 'application/json, text/plain, */*',
+    'Content-Type': 'application/json'
+  },
+}).then(res => res.json())
+.then(res => {
+  console.log(priceEth = res.USD)
+  $(".convert-eth").each(function(){
+    //console.log(($(this).data("price")))
+    $(this).html(($(this).data("price"))+" ETH - " +Math.round(($(this).data("price"))*res.USD)+" USD")
+  })
+});
+
+
 
 $(".pop-food").each(function(){
   setTimeout(() => {
@@ -153,6 +172,8 @@ $("#title-mystic").fadeIn("slow", function() {
       $(".modal-body").html(renderItemsHtml);
     }
   }
+
+  
 
   /**
    * Appels vers le serveur pour récuperer tous les mystics enregistré dans le serveur puis les affichés
