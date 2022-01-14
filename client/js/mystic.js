@@ -5,10 +5,24 @@ var moral = 0;
 var rested = 0;
 var eggs = {};
 var foods = {};
+var items = {};
 var myMystic = {};
 var invitsReceive = undefined;
 var invitsSended = undefined;
 var foodByZone = undefined;
+var myMysticData = undefined;
+
+$(".pop-food").each(function(){
+  setTimeout(() => {
+    $(this).css("animation-duration", getRandomArbitrary(2,4)+"s")
+  }, randRang(1000,5000));
+})
+
+$("#title-mystic").fadeIn("slow", function() {
+  $("#subtitle-mystic").fadeIn("slow", function() {
+
+  })
+})
 
 /**
    * Créer un mystic de façon aléatoire et l'envoyé vers le contrat intélligent
@@ -28,7 +42,7 @@ var foodByZone = undefined;
 
   async function modalBuy(){
     $(".modal-body").html(
-      "<h4 class='title-first-egg'>buy your first Egg</h4>"
+      "<h4 class='title-first-egg'>BUY YOUR FIRST EGG</h4>"
       +"<p style='margin:20'>Préparer vous à acheter votre première créature</br>Ces créatures sont des NFT, échangeable et reproductible avec d'autres utilisateurs</br>Attention ils sont à durer limité, chaque mystic possède une durée de vie, soutenez le depuis sa tendre jeunesse, jusqu'au vieil age</br></p>"
       +"<button class='btn btn-secondary modal-close' style='margin:10px' onClick='mint()'>BUY CLASSIC EGG (3 euros)</button>"
       +"<button class='btn btn-secondary modal-close' style='margin:10px' onClick='mint()'>BUY RARE EGG (30 euros)</button>"
@@ -52,9 +66,7 @@ var foodByZone = undefined;
     if(connected == true){
       let abi = await getAbi();
       let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
-      console.log(ethereum.selectedAddress)
       let mystics = await contract.methods.getAllTokensForUser(ethereum.selectedAddress).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)});
-      console.log(mystics)
       var lastMystic=undefined;
       var lastIdMystic=undefined;
       $("#myMystics").html('');
@@ -83,23 +95,27 @@ var foodByZone = undefined;
           $('#mail-box').fadeIn("slow")
 
           $("#title-mystic").fadeOut()
+          $(".img-intro").fadeOut()
           $("#subtitle-mystic").fadeOut("slow")
-          $(".left-up").fadeOut("slow")
+          /*$(".left-up").fadeOut("slow")
           $(".right-middle").fadeOut("slow")
           $(".left-down").fadeOut("slow")
-          $(".egg-center").fadeOut("slow")
+          $(".egg-center").fadeOut("slow")*/
           $(".logged-btn").fadeIn("slow")
 
         }else{
+          $("#btn-logout").parent().fadeIn("slow")
+          
             $("#title-mystic").fadeIn("slow", function() {
               $("#subtitle-mystic").fadeIn("slow", function() {
-                $(".left-up").fadeIn("slow", function() {
+                /*$(".left-up").fadeIn("slow", function() {
                   $(".right-middle").fadeIn("slow", function() {
                     $(".left-down").fadeIn("slow", function() {
                       $(".egg-center").fadeIn("slow")
+                      $(".img-intro").fadeIn()
                     })
                   })
-                })
+                })*/
               })
             })
         }
@@ -122,6 +138,19 @@ var foodByZone = undefined;
       });
       $(".modal-title").html("My Eggs");
       $(".modal-body").html(renderEggs);
+    }
+  }
+
+  async function allItems(){
+    let connected = await window.web3.eth.net.isListening();
+    if(connected == true){
+      renderItemsHtml = '';
+      console.log('items',items)
+      await Object.keys(items).forEach((item) => {
+        renderItemsHtml += renderItems(item,items[item],true,ethereum.selectedAddress)
+      });
+      $(".modal-title").html("My Items");
+      $(".modal-body").html(renderItemsHtml);
     }
   }
 
@@ -176,18 +205,19 @@ var foodByZone = undefined;
           invitsReceive = res.invitsReceive;
           invitsSended = res.invitsSended;
           foodByZone = res.mystic.data.foodByZone;
+          myMysticData = res.mystic;
+          console.log(res.mystic.data.foods)
+          items = res.mystic.data.foods;
           reloadFoodByZone()
-          
-          
         });
       }
     }
   }
 
-  async function reloadFoodByZone(){
+  async function reloadFoodByZone(){console.log(foodByZone)
     if(foodByZone!=undefined){
       $('.pop-food').each(function(){
-        if(foodByZone[$(this).data("zone")] < Date.now()-600000){
+        if(foodByZone[$(this).data("zone")] < Date.now()-60000){
           $(this).fadeIn("slow")
         }else{
           $(this).fadeOut("slow")
@@ -204,7 +234,7 @@ var foodByZone = undefined;
     if(connected == true){
       let abi = await getAbi();
       let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);//0x400919F8f5740436d1A1769bC241477275C61545
-      let transfer = await contract.methods.transfer(ethereum.selectedAddress,myMysticId,0,false).send({from: ethereum.selectedAddress, gasPrice: '1',}).catch((error)=>{console.log('error transfer',error)}).then(()=>{
+      let transfer = await contract.methods.purchaseAndTransfer(ethereum.selectedAddress,myMysticId,0,false).send({from: ethereum.selectedAddress, gasPrice: '1',}).catch((error)=>{console.log('error transfer',error)}).then(()=>{
         fetch('http://localhost:3000/buyOrTransfer', {
             method: 'post',
             headers: {
@@ -300,6 +330,14 @@ var foodByZone = undefined;
     +'</div>';
    }
 
+   function inAction(action){
+    if(action == 0) return "In wait";
+    if(action == 1) return "Sleep";
+    if(action == 2) return "Search food";
+    if(action == 3) return "Wash";
+    if(action == 4) return "In Train";
+   }
+
   /**
    * Fonction permettant de faire le rendu html d'un mystic
    * @param {*} id 
@@ -310,6 +348,8 @@ var foodByZone = undefined;
   function renderMysticCard(id,data,owned,addr){
     dataStringified = (JSON.stringify(data.mystic).replaceAll("\"", '%84'));
     date = (new Date(data.mystic.createdAt* 1000));
+    console.log(myMysticData)
+    //console.log('data',data)
     return '<div class="mb-12 col m-12" >'
       +'<div class="row g-0">'
         +'<div class="col-md-4">'
@@ -319,15 +359,15 @@ var foodByZone = undefined;
           +'<div class="card-body">'
             +'<h5 class="card-title">#'+id+'</h5>'
             
+            +(owned?'<p class="card-text">'+inAction(myMysticData.data.action)+'</p>':'')
             
-
             +'<p class="card-text"><small class="text-muted">'+timeSince(date)+'</small></p>'
 
             +'<div class="btn-group">'
-              +'<button type="button" class="btn btn-primary">See</button>'
-              +(owned?'<button type="button" class="btn btn-secondary">Feed</button>':'')
-              +(owned?'<button type="button" class="btn btn-success">Farm</button>':'')
-              +(owned?'<button type="button" class="btn btn-danger">Train</button>':'')
+              +(owned?'<button type="button" onclick="action(0)" class="btn btn-primary">Stop</button>':'')
+              +(owned?'<button type="button" onclick="action(1)" class="btn btn-success">Sleep</button>':'')
+              +(owned?'<button type="button" onclick="action(3)" class="btn btn-secondary">Wash</button>':'')
+              +(owned?'<button type="button" onclick="action(4)" class="btn btn-danger">Train</button>':'')
               +'<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>'
               +'<ul class="dropdown-menu">'
                 +(owned?'<li><a class="dropdown-item" href="#" onclick="transfer(`'+addr+'`)">Transfer</a></li>':'')
@@ -386,12 +426,37 @@ var foodByZone = undefined;
     //$('#mystic_starvation_time').html(new Date((parseInt(data.lastMeal)+parseInt(data.endurance))*1000))
   }
 
+  /**
+   * Fonction permettant de faire le rendu html d'un mystic
+   * @param {*} id 
+   * @param {*} data 
+   * @param {*} owned 
+   * @returns 
+   */
+  function renderItems(id,data,owned,addr){console.log(data)
+    return '<div class="mb-12 col m-12">'
+      +'<div class="row g-0">'
+        +'<div class="col-md-4">'
+        +  '<img src="img/'+(id)+'.png" style="width:50px" alt="egg">'
+        +'</div>'
+        +'<div class="col-md-8">'
+          +'<div class="card-body">'
+            +'<div class="btn-group">'
+              +'<button type="button" onclick="feed(`'+id+'`)" class="btn btn-secondary">Feed with '+id+' ('+data+')</button>'
+            +'</div>'
+          +'</div>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
+    //$('#mystic_starvation_time').html(new Date((parseInt(data.lastMeal)+parseInt(data.endurance))*1000))
+  }
+
   
 
   /**
    * Faire un appel au server node.js pour nourrir le mystic
    */
-  async function feed(food){
+  async function feed(food){console.log('feed')
     let connected = await window.web3.eth.net.isListening();
     if(connected == true){
       fetch('http://localhost:3000/feed', {
@@ -404,6 +469,7 @@ var foodByZone = undefined;
       }).then(res => res.json())
       .then(res => {
         foods = res.data.foods;
+        items = res.data.items;
         renderGame();
       });
     }
