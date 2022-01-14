@@ -62,6 +62,14 @@
     text-shadow: black 5px 0 10px;
 }
 
+#title-eggs{
+    margin-top:100px;
+    font-size: 70px;
+    text-align:center;
+    color:white!important;
+    text-shadow: black 5px 0 10px;
+}
+
 #subtitle-mystic{
     font-family: 'Alice in Wonderland', sans-serif;
     font-size: 50px;
@@ -176,6 +184,10 @@
     perspective: 200px; 
   }
 
+  footer{
+      padding-bottom: 30px;
+  }
+
 
 
 
@@ -227,6 +239,10 @@
 
     #title-mystic{
         font-size: 140px;
+    }
+
+    #title-eggs{
+        font-size: 120px!important;
     }
 
     #subtitle-mystic{

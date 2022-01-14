@@ -15,6 +15,7 @@ function startMain(){
   //$("#contentBody").fadeOut("slow");
 
   document.getElementById("btn-login").onclick = login;
+  document.getElementById("btn-log-meta").onclick = login;
   document.getElementById("btn-logout").onclick = logOut;
 
 }
