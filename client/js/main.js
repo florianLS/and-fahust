@@ -2,7 +2,7 @@
 //Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
 const serverUrl = "https://devnihk4zwc7.usemoralis.com:2053/server";
 const appId = "YsHmEnYCWJrVMysXSmrdIwsp0MJsna1K0bsXgben";
-const CONTRACT_ADDRESS = "0x0E4b1c41BE7bf52f2C8472EAeae63999350Dd045";
+const CONTRACT_ADDRESS = "0xC14e9f198D2Aa81bAF1155A8112c9530A7b45Db3";
 
 var myMysticId = undefined;
 console.log(window.web3)

@@ -46,13 +46,13 @@ $("#title-mystic").fadeIn("slow", function() {
 /**
    * Créer un mystic de façon aléatoire et l'envoyé vers le contrat intélligent
    */
-  async function mint() {
+  async function mint(typeMint) {
     window.web3 = await Moralis.Web3.enableWeb3();
     let connected = await window.web3.eth.net.isListening();
     if(connected == true){
       let abi = await getAbi();
       let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
-      let minted = await contract.methods.mint(1,[randRang(0, 4),randRang(0, 4),randRang(0, 4),randRang(0, 4),randRang(0, 4),randRang(0, 4)]).send({from: ethereum.selectedAddress,gasPrice: '1',}).catch((error)=>{console.log(error)}).then((success)=>{
+      let minted = await contract.methods.mint(typeMint).send({from: ethereum.selectedAddress,gasPrice: '1',}).catch((error)=>{console.log(error)}).then((success)=>{
         console.log(success)
       });
     }
