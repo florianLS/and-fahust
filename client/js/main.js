@@ -2,21 +2,32 @@
 //Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
 const serverUrl = "https://devnihk4zwc7.usemoralis.com:2053/server";
 const appId = "YsHmEnYCWJrVMysXSmrdIwsp0MJsna1K0bsXgben";
-const CONTRACT_ADDRESS = "0xC14e9f198D2Aa81bAF1155A8112c9530A7b45Db3";
+const CONTRACT_ADDRESS = "0xb2000CB13790af91a69c639fdc64d6cB05EEE159";
 
 var myMysticId = undefined;
 console.log(window.web3)
 startMain();
 
 
-function startMain(){
+async function startMain(){
   Moralis.start({ serverUrl, appId });
 
   //$("#contentBody").fadeOut("slow");
-
   document.getElementById("btn-login").onclick = login;
   document.getElementById("btn-log-meta").onclick = login;
   document.getElementById("btn-logout").onclick = logOut;
+
+  
+  window.web3 = await Moralis.Web3.enableWeb3();
+  let abi = await getAbi();
+  let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+  let eggOneRemain = await contract.methods.getParamsContract("eggOneRemain").call({from: ethereum.selectedAddress});
+  let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
+  let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});
+
+  $(".iconic-egg-remain").html("( "+(eggOneRemain)+" / 100 )")
+  $(".rare-egg-remain").html("( "+(eggTwoRemain)+" / 900 )")
+  $(".classic-egg-remain").html("( "+(eggThreeRemain)+" / 9000 )")
 
 }
 
@@ -37,7 +48,7 @@ function startMain(){
     let user = Moralis.User.current();
     if (!user) {
     try {
-        user = await Moralis.authenticate({ signingMessage: "Hello World!" })
+        user = await Moralis.authenticate({ signingMessage: "Connect to mystic tamable !" })
         
         renderGame();
     } catch(error) {

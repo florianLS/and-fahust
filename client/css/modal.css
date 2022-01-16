@@ -102,7 +102,7 @@ a:hover{
 
 /* modal styling */
 .modal-content{
-	background-color: rgb(14, 14, 24);
+	background-color: #130d0a;
 	color: #f7f7f7;
 	box-shadow: 0px 0px 8px rgba(134, 134, 134, 0.7);
 	box-shadow: 0px 0px 16px rgba(75, 75, 75, 0.3);
@@ -118,7 +118,7 @@ a:hover{
 }
 .modal-close{
 	background-color: rgb(190, 190, 190) !important;
-	color: rgb(14, 14, 24);
+	color: #130d0a;
 }
 .modal-close:hover{
 	box-shadow: 0px 0px 7px rgb(181, 181, 182);
