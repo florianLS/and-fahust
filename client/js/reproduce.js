@@ -14,7 +14,7 @@
       }).then(res => res.json())
         .then(res => {
           let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);//0x400919F8f5740436d1A1769bC241477275C61545
-          contract.methods.reproduce(res.egg1.parts, idTokenOne, res.egg2.parts, addressTwo, idTokenTwo).send({
+          contract.methods.reproduce( idTokenOne, addressTwo, idTokenTwo).send({
             from: ethereum.selectedAddress,
             //gasPrice: '1',
           }).catch((error)=>{console.log('error transfer',error)}).then((reproduceVar)=>{

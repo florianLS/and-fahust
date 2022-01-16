@@ -8,15 +8,24 @@ contract DelegateContract is Ownable {
     constructor(address _addressContract) {
         addressContract = _addressContract;
         paramsContract["nextId"] = TokenDelegable(addressContract).getParamsContract("nextId");
+        paramsContract["priceEggOne"] = 100000000000000000;
+        paramsContract["priceEggTwo"] = 20000000000000000;
+        paramsContract["priceEggThree"] = 10000000000000000;
+        
+        paramsContract["eggOneRemain"] = 100;
+        paramsContract["eggTwoRemain"] = 900;
+        paramsContract["eggThreeRemain"] = 9000;
      }
 
     address addressContract;
     mapping( string => uint ) paramsContract;
 
-    function priceEgg(uint256 price, uint8 typeEgg) public onlyOwner {
-        if(typeEgg==1) paramsContract["priceEggOne"] = price;
-        if(typeEgg==2) paramsContract["priceEggTwo"] = price;
-        if(typeEgg==3) paramsContract["priceEggThree"] = price;
+    function setParamsContract(string memory keyParams, uint valueParams) external onlyOwner {
+        paramsContract[keyParams] = valueParams;
+    }
+
+    function getParamsContract(string memory keyParams) external view returns (uint256){
+        return paramsContract[keyParams];
     }
 
     function random(uint8 maxNumber) public returns (uint8) {
@@ -34,10 +43,25 @@ contract DelegateContract is Ownable {
     function mintDelegate(uint8 typeMint) public payable{
 
         uint8 bonus = 0;
-        require(typeMint == 1 || typeMint == 2 || typeMint == 3,"Type not good");
-        if(typeMint == 1){require(msg.value >= paramsContract["priceEggOne"],"More ETH required");bonus = 8;}
-        if(typeMint == 2){require(msg.value >= paramsContract["priceEggTwo"],"More ETH required");bonus = 4;}
-        if(typeMint == 3){require(msg.value >= paramsContract["priceEggThree"],"More ETH required");bonus = 0;}
+        require(typeMint == 0 || typeMint == 1 || typeMint == 2,"Type not good");
+        if(typeMint == 0){
+            require(msg.value >= paramsContract["priceEggOne"],"More ETH required");
+            require(paramsContract["eggOneRemain"] > 0,"No eggs remaining");
+            bonus = 8;
+            paramsContract["eggOneRemain"]--;
+        }
+        if(typeMint == 1){
+            require(msg.value >= paramsContract["priceEggTwo"],"More ETH required");
+            require(paramsContract["eggTwoRemain"] > 0,"No eggs remaining");
+            bonus = 4;
+            paramsContract["eggTwoRemain"]--;
+        }
+        if(typeMint == 2){
+            require(msg.value >= paramsContract["priceEggThree"],"More ETH required");
+            require(paramsContract["eggThreeRemain"] > 0,"No eggs remaining");
+            bonus = 0;
+            paramsContract["eggThreeRemain"]--;
+        }
         uint8[] memory randomParts = new uint8[](6);
         uint256[] memory randomParams = new uint256[](10);
         randomParts[0] = random(4)+bonus;
@@ -52,6 +76,8 @@ contract DelegateContract is Ownable {
         randomParams[3] = 0;//mother
         randomParams[4] = 0;//father
         randomParams[5] = 0;//nbrreproduce
+        randomParams[6] = paramsContract["nextId"];//tokenId
+        randomParams[7] = typeMint;//type
         //_tokenDetails[nextId] = Mystic(0,0,0,randomParts,false,true,block.timestamp,msg.value,0);
         //_safeMint(msg.sender, nextId);
         paramsContract["nextId"]++;
@@ -61,7 +87,7 @@ contract DelegateContract is Ownable {
     }
 
     
-    function paramsMystic(uint256 tokenId,bool sellable,bool egg, uint8 tokenIdReproducable) public {
+    function paramsMystic(uint256 tokenId,bool sellable,bool egg, uint256 tokenIdReproducable) public {
         
         TokenDelegable contrat = TokenDelegable(addressContract);
         TokenDelegable.Mystic memory mysticTemp =  contrat.getTokenDetails(tokenId);
@@ -73,23 +99,45 @@ contract DelegateContract is Ownable {
         contrat.updateToken(mysticTemp,tokenId,msg.sender);
     }
 
-    function purchaseAndTransfer(address contactAddr, uint256 tokenId, uint256 amount,bool purchase) external payable {
+    /*function purchaseAndTransfer(address contactAddr, uint256 tokenId,bool purchase) external payable {
         TokenDelegable contrat = TokenDelegable(addressContract);
         TokenDelegable.Mystic memory mystic =  contrat.getTokenDetails(tokenId);
-        if(amount != 0) require(msg.value >= mystic.params256[1] * amount, "Insufficient fonds sent");
+        require(msg.value >= mystic.params256[1], "Insufficient fonds sent");
         require(contrat.getOwnerOf(tokenId) != (purchase?msg.sender:contactAddr), "Already Owned");
         uint256[] memory resultIndex = contrat.getAllTokensForUser(msg.sender);
         require(resultIndex.length <= 1, "Already have a mystic");
         mystic.inSell=false;
         contrat.updateToken(mystic,tokenId,msg.sender);
         contrat.transfer((purchase?contactAddr:msg.sender), (purchase?msg.sender:contactAddr), tokenId);
+    }*/
+
+    function purchase(address contactAddr, uint256 tokenId) external payable {
+        TokenDelegable contrat = TokenDelegable(addressContract);
+        TokenDelegable.Mystic memory mystic =  contrat.getTokenDetails(tokenId);
+        require(msg.value >= mystic.params256[1], "Insufficient fonds sent");
+        require(contrat.getOwnerOf(tokenId) != msg.sender, "Already Owned");
+        uint256[] memory resultIndex = contrat.getAllTokensForUser(msg.sender);
+        require(resultIndex.length <= 1, "Already have a mystic");
+        mystic.inSell=false;
+        contrat.updateToken(mystic,tokenId,msg.sender);
+        contrat.transfer(contactAddr, msg.sender, tokenId);
+    }
+
+    function getAllTokensForUser(address user) external view returns (uint256[] memory){
+        TokenDelegable contrat = TokenDelegable(addressContract);
+        return contrat.getAllTokensForUser(user);
+    }
+
+    function getTokenDetails(uint256 tokenId) external view returns (TokenDelegable.Mystic memory){
+        TokenDelegable contrat = TokenDelegable(addressContract);
+        return contrat.getTokenDetails(tokenId);
     }
 
     
     /*
     faire l'aléatoire depuis le front et mêttre dans parts one et parts two
     */
-    function reproduce( uint8[] memory partsOne, uint256 tokenIdOne, uint8[] memory partsTwo, address senderInvit, uint256 tokenIdTwo) public {
+    function reproduce( uint256 tokenIdOne, address senderInvit, uint256 tokenIdTwo) public {
 
         TokenDelegable contrat = TokenDelegable(addressContract);
         TokenDelegable.Mystic memory mysticOne =  contrat.getTokenDetails(tokenIdOne);
