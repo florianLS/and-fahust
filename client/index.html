@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="css/neon.css">
     <link rel="stylesheet" href="css/cards.css">
     <link rel="stylesheet" href="css/parallax.css">
+    <link rel="stylesheet" href="css/timeline.css">
     <link href="http://fonts.cdnfonts.com/css/alice-in-wonderland" rel="stylesheet">
     <link href="http://fonts.cdnfonts.com/css/lady-ice" rel="stylesheet">
                 
@@ -190,6 +191,44 @@
             </div>
           </div>
 
+          <div class="col-12">
+            <div class="flex-parent">
+              <div class="input-flex-container">
+                <div class="input">
+                  <span data-year="2021" data-info="Start Project"></span>
+                </div>
+                <div class="input">
+                  <span data-year="June" data-info="Website Design"></span>
+                </div>
+                <div class="input">
+                  <span data-year="July" data-info="Creature Design"></span>
+                </div>
+                <div class="input">
+                  <span data-year="2022" data-info="Deploy Smart contract"></span>
+                </div>
+                <div class="input active">
+                  <span data-year="February" data-info="Deploy Website"></span>
+                </div>
+                <div class="input">
+                  <span data-year="March" data-info="Sell eggs"></span>
+                </div>
+                <div class="input">
+                  <span data-year="August" data-info="Egg hatching"></span>
+                </div>
+                <div class="input">
+                  <span data-year="September" data-info="Breeding V2"></span>
+                </div>
+                <div class="input">
+                  <span data-year="2023" data-info="Website V2"></span>
+                </div>
+                <div class="input">
+                  <span data-year="2024" data-info="Mobile application"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
           <h3 id="title-eggs">E G G S</h3>
 
           <div class="col-12">
@@ -204,7 +243,7 @@
                     <h3 class="title">Iconic Egg</h3>
                     <p class="copy">Exchange ETH for mystic eggs</p>
                     <span class="convert-eth" data-price="0.1"></span>
-                    <button class="btn">(0 / 100)</button>
+                    <button onclick="mint(1)" class="btn">(0 / 100)</button>
                 </div>
             </div>
             <div class="card card-third">
@@ -212,15 +251,15 @@
                     <h3 class="title">Rare egg</h3>
                     <p class="copy">Exchange ETH for mystic eggs</p>
                     <span class="convert-eth" data-price="0.02"></span>
-                    <button class="btn">(0 / 900)</button>
+                    <button onclick="mint(2)" class="btn">(0 / 900)</button>
                 </div>
             </div>
             <div class="card card-fourth">
                 <div class="content">
-                    <h3 class="title">Classic-Egg</h3>
+                    <h3 class="title">Classic Egg</h3>
                     <p class="copy">Exchange ETH for mystic eggs</p>
                     <span class="convert-eth" data-price="0.01"></span>
-                    <button class="btn">(0 / 9000)</button>
+                    <button onclick="mint(3)" class="btn">(0 / 9000)</button>
                 </div>
             </div>
           </section>
