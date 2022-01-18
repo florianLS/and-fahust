@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Cardo:400i|Rubik:400,700&display=swap');
+
  :root {
 	 --d: 700ms;
 	 --e: cubic-bezier(0.19, 1, 0.22, 1);
 	 --font-sans: 'Rubik', sans-serif;
-	 --font-serif: 'Cardo', serif;
+	 /*--font-serif: 'Cardo', serif;*/
 }
  * {
 	 box-sizing: border-box;
@@ -31,8 +31,11 @@
        display: inline;
        padding:1rem;
    }
-   p{
+   /*p{
        font-size: 34px!important;
+   }
+   h4{
+       font-size: 38px!important;
    }
    h2{
        font-size: 60px!important;
@@ -42,7 +45,7 @@
    }
    button{
        font-size: 30px!important;
-   }
+   }*/
 }
  .card {
 	 position: relative;

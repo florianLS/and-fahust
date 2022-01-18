@@ -54,7 +54,7 @@
 }
 
 #title-mystic{
-    margin:100px;
+    margin-top:100px;
     font-family: 'Alice in Wonderland', sans-serif;
     font-size: 120px;
     text-align:center;
@@ -196,7 +196,7 @@
   @media screen and (max-width: 1280px)
 {
 
-    .text-light{
+    /*.text-light{
         font-size: 42px!important;
     }
 
@@ -262,7 +262,7 @@
         width: 600px;
         bottom: 30%;
         transform: translate(-50%, -15%);
-    }
+    }*/
 
 }
 

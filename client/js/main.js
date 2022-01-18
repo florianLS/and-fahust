@@ -1,11 +1,10 @@
 /** Connect to Moralis server */
 //Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
-const serverUrl = "https://devnihk4zwc7.usemoralis.com:2053/server";
+const serverUrl = "https://9rotklamvhur.usemoralis.com:2053/server";
 const appId = "YsHmEnYCWJrVMysXSmrdIwsp0MJsna1K0bsXgben";
 const CONTRACT_ADDRESS = "0xb2000CB13790af91a69c639fdc64d6cB05EEE159";
 
 var myMysticId = undefined;
-console.log(window.web3)
 startMain();
 
 
@@ -19,7 +18,9 @@ async function startMain(){
 
   
   window.web3 = await Moralis.Web3.enableWeb3();
+  console.log(window.web3)
   let abi = await getAbi();
+  console.log(web3.eth)
   let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
   let eggOneRemain = await contract.methods.getParamsContract("eggOneRemain").call({from: ethereum.selectedAddress});
   let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
@@ -75,6 +76,30 @@ async function startMain(){
     $(".nav-link").each(function(){
       $(this).removeClass("active")
     })
+  }
+
+  async function faq(){
+      $(".modal-title").html("FAQ");
+      $(".modal-body").html(
+        '<div class="container mt-5">'
+        
+        +'<h4 class="mt-5">Can I earn money by playing ? : </h4>'
+        +'<p>Yes with the breeding system, however it will take time (one month minimum per reproduction) and each creature will be able to give only 3 eggs maximum, to limit the number of tokens.</p>'
+        
+        +'<h4 class="mt-5">Can we buy more than one egg ? : </h4>'
+        +'<p>Yes, but you can only have one adult at a time, to control the speed of reproduction.</p>'
+        
+        +'<h4 class="mt-5">Can we sell our eggs ? : </h4>'
+        +'<p>Yes at the minimum price or you will buy them, however this will be done only on our platform to avoid abuse.</p>'
+
+        +'<h4 class="mt-5">Can my nft be lost permanently ? : </h4>'
+        +'<p>Yes, if you treat it badly, but it happens if you don\'t take care of it for several days.</p>'
+        +'<p>But a creature has also a limited lifespan, it will live several months, then die of old age, in this case your token is lost, you will have to have reproduced your creature before that happens not to have losses</p>'
+
+        +'<h4 class="mt-5">How long will the game take me by day ? : </h4>'
+        +'<p>In general, the game will not take you more than 10 minutes per day, you can also put your account in vacation mode as many times as you want </p>'
+        +'</div>'
+      );
   }
   
   /**

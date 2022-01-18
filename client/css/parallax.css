@@ -15,17 +15,12 @@ body {
 }
 .layer {
     background-position: bottom center;
-    background-size: auto;
+    background-size: cover;
     background-repeat: no-repeat;
     width: 100%;
     height: 700px;
     position: fixed;
     z-index: -1;
-}
-#hero-mobile {
-    display: none;
-    background: url("https://i.ibb.co/d7hw559/full-illustration.png") no-repeat center bottom / cover;
-    height: 320px;
 }
 .first-section {
     padding: 50px 0 20px 0;
@@ -43,7 +38,7 @@ h2 {
 }
 p {
     color: #ede0d5;
-    font-size: 18px;
+    font-size: 20px;
     line-height: 150%;
 }
 #hero, .layer {
@@ -54,31 +49,42 @@ p {
 }
 .layer-1 {
     background-image: url("../img/ilu_03.png");
-    background-position: left bottom;
+    background-size: cover;
+background-repeat: no-repeat;
 }
 .layer-2 {
     background-image: url("../img/ilu_02.png");
 }
 .layer-3 {
-    background-image: url("../img/ilu_man.png");
+    /*background-image: url("../img/ilu_man.png");*/
     background-position: right bottom;
 }
 .layer-4 {
+    background-position: bottom center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 700px;
+    position: absolute;
+    z-index: -1;
     background-image: url("../img/ilu_01.png");
 }
-.layer-5 {
-    background-image: url("https://s.electerious.com/parallaxscene/p4.png");
-}
 .layer-overlay {
-    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/272781/ilu_overlay.png");
+    background-image: url("../img/ilu_overlay.png");
 }
 @media only screen and (max-width: 768px) {
-    #hero {
-        display: none;
-   }
-    #hero-mobile {
-        display: block;
-   }
+    .layer {
+        background-size: auto;
+    }
+    .layer-1 {
+        background-size: auto;
+    }
+    .layer-4 {
+        background-size: auto;
+    }
+    #title-mystic{
+        font-size: 60px;
+    }
 }
 .tutorial-link {
     color: #fff;
