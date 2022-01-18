@@ -28,13 +28,6 @@ contract DelegateContract is Ownable {
         return paramsContract[keyParams];
     }
 
-    function random(uint8 maxNumber) public returns (uint8) {
-        uint256 randomnumber = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, paramsContract["nonce"]))) % maxNumber;
-        randomnumber = randomnumber ;
-        paramsContract["nonce"]++;
-        return uint8(randomnumber);
-    }
-
     function setParamsDelegate(string memory keyParams, uint256 valueParams ) external {
         TokenDelegable contrat = TokenDelegable(addressContract);
         contrat.setParamsContract(keyParams, valueParams);
@@ -49,14 +42,12 @@ contract DelegateContract is Ownable {
             require(paramsContract["eggOneRemain"] > 0,"No eggs remaining");
             bonus = 8;
             paramsContract["eggOneRemain"]--;
-        }
-        if(typeMint == 1){
+        }else if(typeMint == 1){
             require(msg.value >= paramsContract["priceEggTwo"],"More ETH required");
             require(paramsContract["eggTwoRemain"] > 0,"No eggs remaining");
             bonus = 4;
             paramsContract["eggTwoRemain"]--;
-        }
-        if(typeMint == 2){
+        }else if(typeMint == 2){
             require(msg.value >= paramsContract["priceEggThree"],"More ETH required");
             require(paramsContract["eggThreeRemain"] > 0,"No eggs remaining");
             bonus = 0;
@@ -78,8 +69,6 @@ contract DelegateContract is Ownable {
         randomParams[5] = 0;//nbrreproduce
         randomParams[6] = paramsContract["nextId"];//tokenId
         randomParams[7] = typeMint;//type
-        //_tokenDetails[nextId] = Mystic(0,0,0,randomParts,false,true,block.timestamp,msg.value,0);
-        //_safeMint(msg.sender, nextId);
         paramsContract["nextId"]++;
 
         TokenDelegable contrat = TokenDelegable(addressContract);
@@ -133,10 +122,6 @@ contract DelegateContract is Ownable {
         return contrat.getTokenDetails(tokenId);
     }
 
-    
-    /*
-    faire l'aléatoire depuis le front et mêttre dans parts one et parts two
-    */
     function reproduce( uint256 tokenIdOne, address senderInvit, uint256 tokenIdTwo) public {
 
         TokenDelegable contrat = TokenDelegable(addressContract);
@@ -157,21 +142,26 @@ contract DelegateContract is Ownable {
         randomParts[4] = random(2)==0?mysticOne.params8[4]:mysticTwo.params8[4];
         randomParts[5] = random(2)==0?mysticOne.params8[5]:mysticTwo.params8[5];
         randomParams[0] = block.timestamp;
-        randomParams[1] = mysticOne.params256[1];
+        randomParams[1] = (mysticOne.params256[1]+mysticTwo.params256[1])/2;
         randomParams[2] = 0;//idreproduce
         randomParams[3] = tokenIdOne;//mother
         randomParams[4] = tokenIdTwo;//father
         randomParams[5] = 0;//nbrreproduce
+        randomParams[6] = paramsContract["nextId"];//tokenId
+        randomParams[7] = 3;//type
 
         
-        contrat.mint(msg.sender, randomParts, randomParams);paramsContract["nextId"]++;
+        contrat.mint(msg.sender, randomParts, randomParams);
+        paramsContract["nextId"]++;
         randomParts[0] = random(2)==0?mysticOne.params8[0]:mysticTwo.params8[0];
         randomParts[1] = random(2)==0?mysticOne.params8[1]:mysticTwo.params8[1];
         randomParts[2] = random(2)==0?mysticOne.params8[2]:mysticTwo.params8[2];
         randomParts[3] = random(2)==0?mysticOne.params8[3]:mysticTwo.params8[3];
         randomParts[4] = random(2)==0?mysticOne.params8[4]:mysticTwo.params8[4];
         randomParts[5] = random(2)==0?mysticOne.params8[5]:mysticTwo.params8[5];
-        contrat.mint(senderInvit, randomParts, randomParams);paramsContract["nextId"]++;
+        randomParams[6] = paramsContract["nextId"];//tokenId
+        contrat.mint(senderInvit, randomParts, randomParams);
+        paramsContract["nextId"]++;
         
         mysticOne.params256[5]++;
         mysticTwo.params256[5]++;
@@ -181,6 +171,12 @@ contract DelegateContract is Ownable {
         contrat.updateToken(mysticTwo,tokenIdTwo,senderInvit);
     }
 
+    function random(uint8 maxNumber) public returns (uint8) {
+        uint256 randomnumber = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, paramsContract["nonce"]))) % maxNumber;
+        randomnumber = randomnumber ;
+        paramsContract["nonce"]++;
+        return uint8(randomnumber);
+    }
 
     /*FUNDS*/
 

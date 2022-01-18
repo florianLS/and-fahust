@@ -1,39 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="eng">
   <head>
-    <title>Mystic Web3 - Tamable crypto-nft-creature</title>
-    <link rel="shortcut icon" type="image/jpg" href="img/egg.png"/>
+    <title>Mystic Web3 - Tamable crypto NFT creature</title>
+    <link rel="shortcut icon" type="image/jpg" href="img/eggcard3.jpg"/>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta charset="utf-8">
     <meta name="description" content="Mystic Web3 is a play to ean website that allows you to tame magical creatures in a fantasy world, each creature is a nft, reproducible with other users.">
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dust.css">
-    <link rel="stylesheet" href="css/healthbar.css">
-    <link rel="stylesheet" href="css/modal.css">
-    <link rel="stylesheet" href="css/neon.css">
-    <link rel="stylesheet" href="css/cards.css">
-    <link rel="stylesheet" href="css/parallax.css">
-    <link rel="stylesheet" href="css/timeline.css">
     <link href="http://fonts.cdnfonts.com/css/alice-in-wonderland" rel="stylesheet">
     <link href="http://fonts.cdnfonts.com/css/lady-ice" rel="stylesheet">
+    <link rel="stylesheet" href="css/allMyCss.min.css" defer>
                 
   </head>
 
-  <body style='background-color: black;background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/272781/ilu_bg.jpg");background-size: cover;background-repeat: no-repeat;width:100%;height: 100vh;background-position: center;'>
+  <body style='background-color: black;background-image: url("img/ilu_bg.jpg");background-size: cover;background-repeat: no-repeat;width:100%;height: 100vh;background-position: center;'>
     <div id="hero">
       <div class="layer-bg layer" data-depth="0.00" data-type="parallax"></div>
-      <div class="layer-1 layer" data-depth="0.10" data-type="parallax"></div><!--Mountain-->
+      <div class="layer-1 layer" data-depth="0.10" data-type="parallax"></div>
       <div class="layer-2 layer" data-depth="0.50" data-type="parallax"></div>
       <!--<div class="layer-3 layer" data-depth="0.30" data-type="parallax"></div><!--hero-->
-      <div class="layer-overlay layer" data-depth="0.85" data-type="parallax"></div><!--flou ?-->
-      <div class="layer-4 layer" data-depth="1.00" data-type="parallax"></div><!--border-->
-      <!--<div class="layer-5 layer" data-depth="-2.00" data-type="parallax"></div><!--mountain right-->
+      <!--<div class="layer-overlay layer" data-depth="0.85" data-type="parallax"></div>-->
+      <div class="layer-4 "></div>
       
 
 
@@ -41,13 +32,12 @@
 
         <div class="full-wh">
         
-          <!-- STAR ANIMATION -->
           <div class="bg-animation">
             <div id='stars'></div>
             <div id='stars2'></div>
             <div id='stars3'></div>
             <div id='stars4'></div>
-          </div><!-- / STAR ANIMATION -->
+          </div>
 
         </div>
       </div>
@@ -65,16 +55,16 @@
             <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-my" onclick="myMysticModal()" style="color:aliceblue">My mystic</a>
           </li>
           <li class="nav-item logged-btn" style="display:none;">
-            <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-all" onclick="allMystics()" style="color:aliceblue">All mystics</a>
+            <a class="nav-link animated" data-toggle="modal" data-target="#Modal" onclick="allMystics()" style="color:aliceblue">All mystics</a>
           </li>
           <li class="nav-item logged-btn" style="display:none;">
-            <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-all" onclick="renderInvits()" style="color:aliceblue">Invitations</a>
+            <a class="nav-link animated" data-toggle="modal" data-target="#Modal" onclick="renderInvits()" style="color:aliceblue">Invitations</a>
           </li>
           <li class="nav-item logged-btn" style="display:none;">
-            <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-all" onclick="allEggs()" style="color:aliceblue">Eggs</a>
+            <a class="nav-link animated" data-toggle="modal" data-target="#Modal" onclick="allEggs()" style="color:aliceblue">Eggs</a>
           </li>
           <li class="nav-item logged-btn" style="display:none;">
-            <a class="nav-link animated" data-toggle="modal" data-target="#Modal" id="btn-all" onclick="allItems()" style="color:aliceblue">Items</a>
+            <a class="nav-link animated" data-toggle="modal" data-target="#Modal" onclick="allItems()" style="color:aliceblue">Items</a>
           </li>
         </ul>
       </nav>
@@ -86,25 +76,7 @@
             <div id="section-title">
               <h1 id="title-mystic" style="display:none;">M y s t i c</h1>
             </div>
-            <!--<div class="left-up">
-              <img src="img/dna.png" class="left-up-img img-intro" alt="dna">
-              <h4 class="text-light glow">
-                Breeding mystical creatures</br>From egg to adult, feed them</br>Protect them
-              </h4>
-            </div>
-            <div class="right-middle">
-              <h4 class="text-light  glow">
-                Maximum security</br>Developed with blockchain </br>and web3 technologies
-              </h4>
-              <img src="img/blockchain.png" class="right-middle-img img-intro" alt="blockchain">
-            </div>
-            <div class="left-down">
-              <img src="img/eth.png" class="left-down-img img-intro"alt="eth">
-              <h4 class="text-light  glow">
-                Buy your first eggs now</br> And discover the joy of taming an NFT
-              </h4>
-            </div>-->
-            <a data-toggle="modal" data-target="#Modal" style="padding: 0px 0px 0px 0px;" onclick="modalBuy()" >
+            <!--<a data-toggle="modal" data-target="#Modal" style="padding: 0px 0px 0px 0px;" onclick="modalBuy()" >
               <img src="img/egg.png" class="egg-center" alt="egg">
             </a>
 
@@ -116,7 +88,7 @@
           <img src="img/apple.png" alt="apple" style="position: absolute;display: none;top:20vh;left:30w" onclick="pickFood('apple',1,3)" class="pop-food apple-anim" data-zone="3"></div>
           <img src="img/mushroom.png" alt="mushroom" style="position: absolute;display: none;bottom:15vh;right:10vw" onclick="pickFood('mushroom',2,4)" class="pop-food mushroom-anim" data-zone="4"></div>
           <img src="img/mushroom.png" alt="mushroom" style="position: absolute;display: none;bottom:10vh;right:35vw" onclick="pickFood('mushroom',2,5)" class="pop-food mushroom-anim" data-zone="5"></div>
-          <img src="img/mushroom.png" alt="mushroom" style="position: absolute;display: none;bottom:15vh;right:30vw" onclick="pickFood('mushroom',2,6)" class="pop-food mushroom-anim" data-zone="6"></div>
+          <img src="img/mushroom.png" alt="mushroom" style="position: absolute;display: none;bottom:15vh;right:30vw" onclick="pickFood('mushroom',2,6)" class="pop-food mushroom-anim" data-zone="6"></div>-->
         </section>
         
         <!--<section style="position: absolute;display: none;" id="stats">
@@ -154,16 +126,12 @@
 
     </div>
 
-
-
-
-    <div id="hero-mobile"></div>
     <div id="content">
       <div class="container">
         <section class="first-section">
           <div class="row">
             <div class="col-lg-6 col-md-12">
-              <h2>Tamable crypto nft creature</h2>
+              <h2>Tamable crypto <strong>nft</strong> creature</h2>
             </div>
           </div>
           <div class="row">
@@ -189,44 +157,47 @@
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="col-12">
-            <div class="flex-parent">
-              <div class="input-flex-container">
-                <div class="input">
-                  <span data-year="2021" data-info="Start Project"></span>
-                </div>
-                <div class="input">
-                  <span data-year="June" data-info="Website Design"></span>
-                </div>
-                <div class="input">
-                  <span data-year="July" data-info="Creature Design"></span>
-                </div>
-                <div class="input">
-                  <span data-year="2022" data-info="Deploy Smart contract"></span>
-                </div>
-                <div class="input active">
-                  <span data-year="February" data-info="Deploy Website"></span>
-                </div>
-                <div class="input">
-                  <span data-year="March" data-info="Sell eggs"></span>
-                </div>
-                <div class="input">
-                  <span data-year="August" data-info="Egg hatching"></span>
-                </div>
-                <div class="input">
-                  <span data-year="September" data-info="Breeding V2"></span>
-                </div>
-                <div class="input">
-                  <span data-year="2023" data-info="Website V2"></span>
-                </div>
-                <div class="input">
-                  <span data-year="2024" data-info="Mobile application"></span>
+            <div class="col-12" style="max-width: 95%;">
+              <div class="flex-parent">
+                <div class="input-flex-container">
+                  <div class="input">
+                    <span data-year="2021" data-info="Start Project"></span>
+                  </div>
+                  <div class="input">
+                    <span data-year="June" data-info="Website Design"></span>
+                  </div>
+                  <div class="input">
+                    <span data-year="July" data-info="Creature Design"></span>
+                  </div>
+                  <div class="input">
+                    <span data-year="2022" data-info="Deploy Smart contract"></span>
+                  </div>
+                  <div class="input active">
+                    <span data-year="February" data-info="Deploy Website"></span>
+                  </div>
+                  <div class="input">
+                    <span data-year="March" data-info="Sell eggs"></span>
+                  </div>
+                  <div class="input">
+                    <span data-year="August" data-info="Egg hatching"></span>
+                  </div>
+                  <div class="input">
+                    <span data-year="September" data-info="Breeding V2"></span>
+                  </div>
+                  <div class="input">
+                    <span data-year="2023" data-info="Website V2"></span>
+                  </div>
+                  <div class="input">
+                    <span data-year="2024" data-info="Mobile application"></span>
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
+
+          
           
 
           <h3 id="title-eggs">E G G S</h3>
@@ -265,10 +236,21 @@
           </section>
 
         </section>
-        <footer>
-          <strong>Mystic Smart Contract</strong>
+        <footer class="row">
+          <a class="col-3 col-lg-1" type="button" href="#">
+            <img src="https://img.icons8.com/color/48/000000/discord-new-logo.png" alt="discord"/>
+          </a>
+          <a class="col-3 col-lg-1" type="button" href="#">
+            <img src="https://img.icons8.com/fluency/48/000000/twitter.png" alt="twitter"/>
+          </a>
+          <a class="col-3 col-lg-1" type="button" href="#">
+            <img src="https://img.icons8.com/external-vitaliy-gorbachev-blue-vitaly-gorbachev/60/000000/external-blockchain-cryptocurrency-vitaliy-gorbachev-blue-vitaly-gorbachev-1.png" alt="blockchain"/>
+          </a>
+          <a class="col-3 col-lg-1" type="button" data-toggle="modal" data-target="#Modal"  onclick="faq()">
+            <img src="https://img.icons8.com/fluency/48/000000/faq.png" alt="faq"/>
+          </a>
           <br/>
-          <strong>©2022 Mystic-Tamable, Inc All rights reserved</strong>
+          <strong  class="col-12">©2022 Mystic-Tamable, Inc All rights reserved</strong>
           <br/>
         </footer>
       </div>
@@ -285,8 +267,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-          </div>
+          <div class="modal-body row mx-md-n3"></div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary modal-close" data-dismiss="modal">Close</button>
           </div>
@@ -295,12 +276,11 @@
     </div>
   </div>
     
-
-    <script type="text/javascript" src="js/main.js"></script>
-    <script type="text/javascript" src="js/mystic.js"></script>
-    <script type="text/javascript" src="js/reproduce.js"></script>
-    <script type="text/javascript" src="js/healthbar.js"></script>
-    <script type="text/javascript" src="js/modal.js"></script>
-    <script type="text/javascript" src="js/parallax.js"></script>
+    <script src="js/min/moralis.min.js" defer></script>
+    <script src="js/min/jquery.min.js" defer></script>
+    <script src="js/min/web3.min.js" defer></script>
+    <script src="js/min/bootstrap.min.js" defer></script>
+    <script type="text/javascript" src="js/min/allmyJs.min.js" defer></script>
+    <!--<script type="text/javascript" src="js/min/allmyJs.js" ></script>-->
   </body>
 </html>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:300,700');
+
 /* navbar styling */
 .navbar{
 	background-color: #1D1309 !important;
@@ -11,6 +11,10 @@
 }
 .navbar-nav .nav-item{
 	color: #b4bcff !important;
+}
+.modal-dialog {
+    max-width: 80vw;
+    margin: 1.75rem auto;
 }
 
 /* button animation */
@@ -88,7 +92,7 @@ a:hover{
 	box-shadow: 1px 1px 5px #5c59fd;
 }
 #about{
-	font-family: Raleway;
+	/*font-family: Raleway;*/
 	letter-spacing: 2px;
 	font-weight: 300;
 	cursor: default;
@@ -143,7 +147,7 @@ a:hover{
 	display: flex;
 	flex-direction: column;
 	margin: 0 auto;
-	font-family: Raleway;
+	/*font-family: Raleway;*/
 }
 .projectsContainer .btn{
 	font-weight: 700;
@@ -155,8 +159,15 @@ iframe{
 }
 
 /* phone screen styling */
-@media screen and (max-width: 450px){
-	#about{
+@media screen and (max-width: 800px){
+	.modal-dialog {
+		max-width: 100vw;
+		margin: 0rem;
+	}
+	.modal-content{
+		width:100vw;
+	}
+	/*#about{
 	left: calc(50vw - 120px);
 	top: 66px;
 	font-size: 14px;
@@ -164,7 +175,7 @@ iframe{
 	}
 	.btnContainer{
 		margin-top: 35vh;
-	}		
+	}		*/
 }
 
 /* making underline animation */
@@ -183,7 +194,3 @@ iframe{
 	}
 }
 
-.modal-dialog {
-    max-width: 80vw;
-    margin: 1.75rem auto;
-}

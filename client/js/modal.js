@@ -38,4 +38,4 @@ console.log(`${notScrolledPast} ${header.offsetTop} ${header.clientHeight} ${tot
 	})
 };
 // modal scroll listener
-modal.addEventListener('scroll', debounce(dynamicHeaders));
+//modal.addEventListener('scroll', debounce(dynamicHeaders));

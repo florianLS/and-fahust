@@ -1,4 +1,201 @@
-var life = 0;
+/** Connect to Moralis server */
+//Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
+const serverUrl = "https://9rotklamvhur.usemoralis.com:2053/server";
+const appId = "YsHmEnYCWJrVMysXSmrdIwsp0MJsna1K0bsXgben";
+const CONTRACT_ADDRESS = "0xb2000CB13790af91a69c639fdc64d6cB05EEE159";
+
+var myMysticId = undefined;
+startMain();
+
+
+async function startMain(){
+  Moralis.start({ serverUrl, appId });
+
+  //$("#contentBody").fadeOut("slow");
+  document.getElementById("btn-login").onclick = login;
+  document.getElementById("btn-log-meta").onclick = login;
+  document.getElementById("btn-logout").onclick = logOut;
+
+  
+  window.web3 = await Moralis.Web3.enableWeb3();
+  console.log(window.web3)
+  let abi = await getAbi();
+  console.log(web3.eth)
+  let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+  let eggOneRemain = await contract.methods.getParamsContract("eggOneRemain").call({from: ethereum.selectedAddress});
+  let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
+  let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});
+
+  $(".iconic-egg-remain").html("( "+(eggOneRemain)+" / 100 )")
+  $(".rare-egg-remain").html("( "+(eggTwoRemain)+" / 900 )")
+  $(".classic-egg-remain").html("( "+(eggThreeRemain)+" / 9000 )")
+
+}
+
+  function randRang(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+  /**
+   * Login 
+   */
+  async function login() {
+    let user = Moralis.User.current();
+    if (!user) {
+    try {
+        user = await Moralis.authenticate({ signingMessage: "Connect to mystic tamable !" })
+        
+        renderGame();
+    } catch(error) {
+      console.log(error)
+    }
+    }else{
+      renderGame();
+    }
+  }
+
+  /**
+   * logout
+   */
+  async function logOut() {
+    await Moralis.User.logOut();
+    $(".unlogged-btn").fadeIn("slow");
+    $(".logged-btn").fadeOut("slow");
+
+    $("#contentBody").fadeOut("slow");
+    $("#myMystics").html('');
+  }
+
+  function navAllUnactive(){
+    $(".nav-link").each(function(){
+      $(this).removeClass("active")
+    })
+  }
+
+  async function faq(){console.log('faq')
+      $(".modal-title").html("FAQ");
+      $(".modal-body").html(
+        '<div class="container mt-5">'
+        
+        +'<h4 class="mt-5">Can I earn money by playing ? : </h4>'
+        +'<p>Yes with the breeding system, however it will take time (one month minimum per reproduction) and each creature will be able to give only 3 eggs maximum, to limit the number of tokens.</p>'
+        
+        +'<h4 class="mt-5">Can we buy more than one egg ? : </h4>'
+        +'<p>Yes, but you can only have one adult at a time, to control the speed of reproduction.</p>'
+        
+        +'<h4 class="mt-5">Can we sell our eggs ? : </h4>'
+        +'<p>Yes at the minimum price or you will buy them, however this will be done only on our platform to avoid abuse.</p>'
+
+        +'<h4 class="mt-5">Can my nft be lost permanently ? : </h4>'
+        +'<p>Yes, if you treat it badly, but it happens if you don\'t take care of it for several days.</p>'
+        +'<p>But a creature has also a limited lifespan, it will live several months, then die of old age, in this case your token is lost, you will have to have reproduced your creature before that happens not to have losses</p>'
+
+        +'<h4 class="mt-5">How long will the game take me by day ? : </h4>'
+        +'<p>In general, the game will not take you more than 10 minutes per day, you can also put your account in vacation mode as many times as you want </p>'
+        +'</div>'
+      );
+  }
+  
+  /**
+   * récuperer Le abi (ensemble des fonctions du smart contract)
+   */
+  function getAbi(){
+    return new Promise((res)=>{
+      $.getJSON("js/Token.json",((json)=>{
+        res(json.abi)
+      }))
+    })
+    
+  }
+
+  function timeSince(date) {
+
+    var seconds = Math.floor((new Date() - date) / 1000);
+  
+    var interval = seconds / 31536000;
+  
+    if (interval > 1) {
+      return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+      return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+      return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+      return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+      return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+  }
+
+  /** Useful Resources  */
+
+  // https://docs.moralis.io/moralis-server/users/crypto-login
+  // https://docs.moralis.io/moralis-server/getting-started/quick-start#user
+  // https://docs.moralis.io/moralis-server/users/crypto-login#metamask
+
+  /** Moralis Forum */
+
+  // https://forum.moralis.io/
+
+  const headers = document.querySelectorAll('.highlight');
+  const modal = document.querySelector('#aboutModal');
+  // debounce function to limit function running to 1 time every 10ms. just copied directly from stackoverflow
+  function debounce(func, wait = 10, immediate = true) {
+      var timeout;
+      return function() {
+        var context = this, args = arguments;
+        var later = function() {
+           timeout = null;
+           if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+      };
+   }
+  
+  // function that will make headers font-size increase when scrolled into view!
+  function dynamicHeaders(e){
+  // Run code for every header in modal
+      headers.forEach(header => {
+  // set up constants defining when headers are in view; Math needs work here
+  // totalScroll tracks pixels for exact bottom of what is in view;
+  const totalScroll = (modal.scrollTop + window.innerHeight);
+  // should show if screen has been scrolled more than each header.offsetTop
+  const inView = totalScroll > header.offsetTop;
+  const headerBottom = (header.offsetTop + header.clientHeight); 
+  const notScrolledPast = headerBottom < totalScroll;
+  console.log(`${notScrolledPast} ${header.offsetTop} ${header.clientHeight} ${totalScroll}`);
+  // add class that 'pops up' headers when scrolled into view.
+      if(inView){
+      header.classList.add('fadeIntoView');	
+  // if header is not in view, remove that class. 
+      } else {
+          header.classList.remove('fadeIntoView');	
+          }
+      })
+  };
+  // modal scroll listener
+  //modal.addEventListener('scroll', debounce(dynamicHeaders));
+
+
+  var life = 0;
 var hungry = 0;
 var cleanliness = 0;
 var moral = 0;
@@ -584,3 +781,185 @@ $("#title-mystic").fadeIn("slow", function() {
   /** Moralis Forum */
 
   // https://forum.moralis.io/
+
+
+  (function() {
+    window.addEventListener('scroll', function(event) {
+      var depth, layer, layers, movement, topDistance, translate3d, _i, _len;
+      topDistance = this.pageYOffset;
+      layers = document.querySelectorAll("[data-type='parallax']");
+      for (_i = 0, _len = layers.length; _i < _len; _i++) {
+        layer = layers[_i];
+        depth = layer.getAttribute('data-depth');
+        movement = -(topDistance * depth);
+        translate3d = 'translate3d(0, ' + movement + 'px, 0)';
+        layer.style['-webkit-transform'] = translate3d;
+        layer.style['-moz-transform'] = translate3d;
+        layer.style['-ms-transform'] = translate3d;
+        layer.style['-o-transform'] = translate3d;
+        layer.style.transform = translate3d;
+      }
+    });
+  
+  }).call(this);
+
+
+    /**
+   * reproduction en deux Mystic token
+   * @param {*} idTokenOne 
+   */
+     function reproduce(idTokenOne,idTokenTwo,addressTwo){
+        getAbi().then((abi)=>{
+          fetch('http://localhost:3000/acceptInvit', {
+            method: 'post',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "addrOne": ethereum.selectedAddress.toString(),"addrTwo": addressTwo.toString(),"idTokenOne":idTokenOne,"idTokenTwo":idTokenTwo})
+          }).then(res => res.json())
+            .then(res => {
+              let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);//0x400919F8f5740436d1A1769bC241477275C61545
+              contract.methods.reproduce( idTokenOne, addressTwo, idTokenTwo).send({
+                from: ethereum.selectedAddress,
+                //gasPrice: '1',
+              }).catch((error)=>{console.log('error transfer',error)}).then((reproduceVar)=>{
+                console.log(reproduceVar)
+              }).then(()=>{
+                renderGame()
+              });
+    
+            });
+          
+        });
+      }
+    
+      
+      /**
+       * render les invitations
+       */
+       function renderInvits(){
+        //receive
+        modalHtml='<h5>Receive</h5><div class="hiddenContainer">';
+          if(invitsReceive){
+            Object.keys(invitsReceive).forEach(receive => {
+    
+              modalHtml+='<div>'
+                  +'<a href="#" >'
+                  +'<i class="fas fa-envelope"></i>#'+invitsReceive[receive]+'</a> '
+                  +'<button class="btn btn-success" onclick="reproduce('+myMysticId+','+invitsReceive[receive]+',`'+receive+'`)">accept</button>'
+                  +'<button class="btn btn-danger" onclick="deleteInvitReceive('+myMysticId+',`'+receive+'`)">decline</button>'
+                +'</div>'
+    
+    
+              /*receiveHtml+='<tr>'
+                +'<th scope="row">#'+res.invitsReceive[receive]+'</th>'
+                +'<th scope="row"><button class="btn btn-success" onclick="reproduce('+myMysticId+','+res.invitsReceive[receive]+',`'+receive+'`)">accept</button><button class="btn btn-danger" onclick="deleteInvitReceive('+myMysticId+',`'+receive+'`)">decline</button></th>'
+              +'</tr>'*/
+            });
+          }
+          //receiveHtml+='</tbody></table>'
+          //sended
+          modalHtml+='</div><h5>Sended</h5><div class="hiddenContainer">';
+          if(invitsSended){
+            Object.keys(invitsSended).forEach(sended => {
+              modalHtml+='<div>'
+                  +'<a href="#" >'
+                  +'<i class="fas fa-envelope"></i>#'+invitsSended[sended]+'</a> '
+                  +'<button class="btn btn-danger" onclick="deleteInvitSended('+invitsSended[sended]+','+sended+')">decline</button>'
+                +'</div>'
+    
+              /*sendedHtml+='<tr>'
+                +'<th scope="row">#'+res.invitsSended[sended]+'</th>'
+                +'<th scope="row"><button class="btn btn-danger" onclick="deleteInvitSended('+res.invitsSended[sended]+','+sended+')">decline</button></th>'
+              +'</tr>'*/
+            });
+          }
+          //sendedHtml+='</tbody></table>'
+          $(".modal-title").html("Invitation");
+          $(".modal-body").html(modalHtml+"</div>")
+      }
+    
+      /**
+       * envoyer une invitation pour reproduction a un mystic qui n'est pas le scien
+       * @param {*} idToken 
+       */
+      function sendInvit(idToken,sell,egg,tokenIdReproducable,addr){
+          getAbi().then((abi)=>{
+            let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+            //ajoute l'addresse du mystic a qui l'ont envoi l'invitation pour quand il acceptera être sur que vous l'avez bien envoyé
+            
+            contract.methods.paramsMystic(idToken,sell,egg,tokenIdReproducable).send({
+              from: ethereum.selectedAddress,
+            }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
+    
+              fetch('http://localhost:3000/addInvit', {
+                method: 'post',
+                headers: {
+                  'Accept': 'application/json, text/plain, */*',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "addrOne": ethereum.selectedAddress.toString(),"addrTwo": addr.toString(),"idTokenOne":myMysticId,"idTokenTwo":idToken})
+              }).then(res => res.json())
+                .then(res => {
+                });
+    
+              
+            });
+          });
+      }
+    
+      /**
+       * annuler l'invitation envoyé
+       * @param {*} idToken 
+       */
+      function deleteInvitSended(idToken,addr){
+          getAbi().then((abi)=>{
+            let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+            //ajoute l'addresse du mystic a qui l'ont envoi l'invitation pour quand il acceptera être sur que vous l'avez bien envoyé
+            //contract.methods.addSubInvitation(myMysticId, 0, false).send({
+            contract.methods.paramsMystic(myMysticId,myMystic.sell,myMystic.egg,0).send({
+              from: ethereum.selectedAddress,
+              gasPrice: '1',
+            }).catch((error)=>{console.log('error transfer',error)}).then((invit)=>{
+    
+              fetch('http://localhost:3000/deleteInvitSended', {
+                method: 'post',
+                headers: {
+                  'Accept': 'application/json, text/plain, */*',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "addrOne": ethereum.selectedAddress,"addrTwo": addr,"idTokenOne":myMysticId,"idTokenTwo":idToken})
+              }).then(res => {
+                renderGame()
+              });
+            });
+          });
+      }
+    
+      /**
+       * annuler l'invitation envoyé
+       * @param {*} idToken 
+       */
+      function deleteInvitReceive(idToken,addr){
+        /*getAbi().then((abi)=>{
+          let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+          //ajoute l'addresse du mystic a qui l'ont envoi l'invitation pour quand il acceptera être sur que vous l'avez bien envoyé
+          //contract.methods.addSubInvitation(idToken, 0, false).send({
+          contract.methods.paramsMystic(idToken,myMystic.sell,myMystic.egg,0).send({
+            from: ethereum.selectedAddress,
+            gasPrice: '1',
+          }).catch((error)=>{console.log('error transfer',error)}).then((invit)=>{*/
+            fetch('http://localhost:3000/deleteInvitReceive', {
+              method: 'post',
+              headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ "addrOne": ethereum.selectedAddress,"addrTwo": addr,"idTokenOne":myMysticId,"idTokenTwo":idToken})
+            }).then(res => {
+                renderGame()
+              });
+          //});
+        //});
+      }
