@@ -96,17 +96,20 @@
     background-size: cover;
 }
 .card-second {
-    background-image: url("../img/eggcard2.jpg");
+    /*background-image: url("../img/eggcard2.jpg");*/
+    background-image: url("../img/ilu_bg.jpg");
     background-position: center;
     background-size: cover;
 }
 .card-third {
-    background-image: url("../img/eggcard.jpg");
+    /*background-image: url("../img/eggcard.jpg");*/
+    background-image: url("../img/ilu_bg.jpg");
     background-position: center;
     background-size: cover;
 }
 .card-fourth {
-    background-image: url("../img/eggcard3.jpg");
+    /*background-image: url("../img/eggcard3.jpg");*/
+    background-image: url("../img/ilu_bg.jpg");
     background-position: center;
     background-size: cover;
 }
@@ -533,15 +536,16 @@ h1 b {
 	
 }
 a{
-	color: #6959fd;
-	text-decoration: none;
-	padding: 8px 15px 8px 15px;
-	border-radius: 2px;
+	color: #ede0d5;
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: bold;
 }
 a:hover{
-	color: white;
-	text-decoration: none;
-	box-shadow: 1px 1px 5px #5c59fd;
+	color: #ede0d5;
+    font-size: 20px;
+    text-decoration: underline;
+    font-weight: bold;
 }
 #about{
 	/*font-family: Raleway;*/
@@ -1272,3 +1276,55 @@ background-repeat: no-repeat;
       text-align: center; }*/
     }
   
+
+    .layer-egg{
+        height:250px;
+        margin: auto;
+        position: absolute;
+        /*filter: contrast(50%);*/
+    }
+
+    .layer-egg-classic{
+        filter: drop-shadow(30px 30px 30px white) /*contrast(50%)*/;
+    }
+
+    .layer-egg-rare{
+        filter: drop-shadow(30px 30px 30px black) /*contrast(50%)*/;
+    }
+
+    .layer-egg-iconic{
+        filter: drop-shadow(30px 30px 30px gold) /*contrast(50%)*/;
+    }
+
+    .eggLayer{    
+        width: 50%;
+        position: absolute;
+        height: 100px;
+        left: 0;
+        right: 0;
+        top: 50px;
+        bottom: 0;
+        height:250px;
+        transform-origin: bottom right ;
+        
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+    }
+
+
+    @media (max-width: 600px) {
+        .eggLayer{    
+            top: 0px;
+            height:250px;
+        }
+        .layer-egg{
+            height:250px;
+            /*filter: contrast(50%);*/
+        }
+    }
+
+    
+
+

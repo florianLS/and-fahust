@@ -1,38 +1,47 @@
 /** Connect to Moralis server */
 //Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
 const serverUrl = "https://9rotklamvhur.usemoralis.com:2053/server";
-const appId = "YsHmEnYCWJrVMysXSmrdIwsp0MJsna1K0bsXgben";
-const CONTRACT_ADDRESS = "0xb2000CB13790af91a69c639fdc64d6cB05EEE159";
+const appId = "32qjS96gLON4ZUxrPSXbqM73w1h3HGDpFlbQ9tMM";
+const CONTRACT_ADDRESS = "0x0afDD0BB50E643EEAC33Fc1e445077A89B46732b";
+//DEV : 0xD66e3e871D0d0c3Ec4e42e14DA2B24ccd36CBA84
+//PROD : 0x0afDD0BB50E643EEAC33Fc1e445077A89B46732b
 
 var myMysticId = undefined;
 startMain();
 
+var web3 = undefined;
+
 
 async function startMain(){
-  Moralis.start({ serverUrl, appId });
-
-  //$("#contentBody").fadeOut("slow");
-  document.getElementById("btn-login").onclick = login;
-  document.getElementById("btn-log-meta").onclick = login;
-  document.getElementById("btn-logout").onclick = logOut;
-
+    /*Moralis.start({ serverUrl, appId });
+    user = await Moralis.authenticate({ signingMessage: "Connect to mystic tamable !" })
+    window.web3 = await Moralis.Web3.enableWeb3();*/
+    await Moralis.enableWeb3()
+    window.web3 = new Web3(Moralis.provider)
+    let connected = await window.web3.eth.net.isListening();
+    //$("#contentBody").fadeOut("slow");
+    document.getElementById("btn-login").onclick = login;
+    document.getElementById("btn-log-meta").onclick = login;
+    document.getElementById("btn-logout").onclick = logOut;
   
-  window.web3 = await Moralis.Web3.enableWeb3();
-  console.log(window.web3)
-  let abi = await getAbi();
-  console.log(web3.eth)
-  let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
-  let eggOneRemain = await contract.methods.getParamsContract("eggOneRemain").call({from: ethereum.selectedAddress});
-  let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
-  let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});
+    //window.web3 = await Moralis.Web3.enableWeb3();
+      //let connected = await window.web3.eth.net.isListening();
+      if(connected == true){
+          let abi = await getAbi();
+          let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+          window.web3 = await Moralis.Web3.enableWeb3();
+          let eggOneRemain = await contract.methods.getParamsContract("eggOneRemain").call({from: ethereum.selectedAddress});
+          let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
+          let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});
+  
+          $(".iconic-egg-remain").html("Buy ( "+(eggOneRemain)+" / 100 )")
+          $(".rare-egg-remain").html("Buy ( "+(eggTwoRemain)+" / 900 )")
+          $(".classic-egg-remain").html("Buy ( "+(eggThreeRemain)+" / 9000 )")
+     }
+  
+  }
 
-  $(".iconic-egg-remain").html("( "+(eggOneRemain)+" / 100 )")
-  $(".rare-egg-remain").html("( "+(eggTwoRemain)+" / 900 )")
-  $(".classic-egg-remain").html("( "+(eggThreeRemain)+" / 9000 )")
-
-}
-
-  function randRang(min, max) {
+function randRang(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -42,14 +51,72 @@ async function startMain(){
     return Math.random() * (max - min) + min;
 }
 
+setInterval(() => {
+    //eggRenderImg(0);
+}, 300);
+
+eggRenderImg(0);
+eggRenderImg(4);
+eggRenderImg(8);
+
+function eggRenderImg(type){
+    colorInt = randRang(0,3);
+    if(colorInt == 0)color ="blue"
+    if(colorInt == 1)color ="green"
+    if(colorInt == 2)color ="purple"
+    if(colorInt == 3)color ="red"
+    type1 = randRang(0,3)+type;
+    type1 ="img/eggs/type1/"+color+"/"+(type1+1)+".png"
+    type2 = randRang(0,3)+type;
+    type2 ="img/eggs/type2/"+color+"/"+(type2+1)+".png"
+    type3 = randRang(0,3)+type;
+    type3 ="img/eggs/type3/"+color+"/"+(type3+1)+".png"
+    type4 = randRang(0,3)+type;
+    type4 ="img/eggs/type4/"+color+"/"+(type4+1)+".png"
+    let card = $(".card-fourth");
+    let classType = "layer-egg-classic";
+    if(type==4){card = $(".card-third");classType = "layer-egg-rare";}
+    if(type==8){card = $(".card-second");classType = "layer-egg-iconic";}
+    card.prepend("<div class='eggLayer'>"
+    +'<img loading="lazy" src="img/eggs/egg_color'+(((colorInt+1)+(type==0||type==4?0:4)))+'.png" class="layer-egg '+classType+'" alt="mystic">'
+    +'<img loading="lazy" src="'+type4+'" class="layer-egg" style="opacity:0.5;" alt="mystic">'
+    +'<img loading="lazy" src="'+type3+'" class="layer-egg" style="opacity:0.8;" alt="mystic">'
+    +'<img loading="lazy" src="'+type2+'" class="layer-egg" alt="mystic">'
+    +'<img loading="lazy" src="'+type1+'" class="layer-egg" style="opacity:0.8;" alt="mystic">'
+    +"<div>") 
+    
+    var rotated = 0;
+    setInterval(() => {
+        var slides = document.getElementsByClassName("eggLayer");
+        for (var i = 0; i < slides.length; i++) {
+            
+            var div = slides[i],
+                deg = rotated ? -randRang(0,6) : randRang(0,6);
+        
+            div.style.webkitTransform = 'rotate('+deg+'deg)'; 
+            div.style.mozTransform    = 'rotate('+deg+'deg)'; 
+            div.style.msTransform     = 'rotate('+deg+'deg)'; 
+            div.style.oTransform      = 'rotate('+deg+'deg)'; 
+            div.style.transform       = 'rotate('+deg+'deg)'; 
+        
+            rotated = !rotated;
+        }
+    }, randRang(2000,4900));
+
+}
+
+
+
   /**
    * Login 
    */
   async function login() {
-    let user = Moralis.User.current();
-    if (!user) {
+    await Moralis.enableWeb3()
+    window.web3 = new Web3(Moralis.provider)
+    let connected = await window.web3.eth.net.isListening();
+    if(connected == true){
     try {
-        user = await Moralis.authenticate({ signingMessage: "Connect to mystic tamable !" })
+       // user = await Moralis.authenticate({ signingMessage: "Connect to mystic tamable !" })
         
         renderGame();
     } catch(error) {
@@ -78,26 +145,41 @@ async function startMain(){
     })
   }
 
-  async function faq(){console.log('faq')
+  async function faq(){
       $(".modal-title").html("FAQ");
       $(".modal-body").html(
         '<div class="container mt-5">'
         
         +'<h4 class="mt-5">Can I earn money by playing ? : </h4>'
-        +'<p>Yes with the breeding system, however it will take time (one month minimum per reproduction) and each creature will be able to give only 3 eggs maximum, to limit the number of tokens.</p>'
+        +'<p>Yes with the breeding system, however it will take time (one month minimum per reproduction) and each creature will be able to give only 3 eggs maximum, to limit the number of tokens.</p><br/>'
+
+        +'<h4 class="mt-5">How to buy NYXIES? : </h4>'
+        +'<p>You will need a <a href="https://metamask.io/download/">meta mask</a> account to start, then you will need to <a href="https://autofarm.gitbook.io/autofarm-network/how-tos/polygon-chain-matic/metamask-add-polygon-matic-network">add the polygon network</a>, and add MATIC crypto <a href="https://wallet.polygon.technology/gas-swap/">by converting your eth</a>, or your dollars, you will finally just click on the egg you want and then buy it</p><br/>'
         
         +'<h4 class="mt-5">Can we buy more than one egg ? : </h4>'
-        +'<p>Yes, but you can only have one adult at a time, to control the speed of reproduction.</p>'
+        +'<p>Yes, but you can only have one adult at a time, to control the speed of reproduction.</p><br/>'
         
         +'<h4 class="mt-5">Can we sell our eggs ? : </h4>'
-        +'<p>Yes at the minimum price or you will buy them, however this will be done only on our platform to avoid abuse.</p>'
+        +'<p>Yes at the minimum price or you will buy them, however this will be done only on our platform to avoid abuse.</p><br/>'
 
         +'<h4 class="mt-5">Can my nft be lost permanently ? : </h4>'
         +'<p>Yes, if you treat it badly, but it happens if you don\'t take care of it for several days.</p>'
-        +'<p>But a creature has also a limited lifespan, it will live several months, then die of old age, in this case your token is lost, you will have to have reproduced your creature before that happens not to have losses</p>'
+        +'<p>But a creature has also a limited lifespan, it will live several months, then die of old age, in this case your token is lost, you will have to have reproduced your creature before that happens not to have losses</p><br/>'
 
         +'<h4 class="mt-5">How long will the game take me by day ? : </h4>'
-        +'<p>In general, the game will not take you more than 10 minutes per day, you can also put your account in vacation mode as many times as you want </p>'
+        +'<p>In general, the game will not take you more than 10 minutes per day, you can also put your account in vacation mode as many times as you want </p><br/>'
+
+        +'<h4 class="mt-5">How to add my nyxies balances to meta mask ? : </h4>'
+        +'<p>You just have to launch meta mask, click on "import tokens", then add the following contract address 0xfB68d56954f011C3Ea24691df9BEf073C8a78F51 , give it a name (NYXIES preferably) and a decimal ( 1 )</p><br/>'
+
+        
+        +'<h4 class="mt-5">Who are you ? : </h4>'
+        +'<p>We are a team of an experienced blockchain and smart contract backend developer, a web integrator, a graphic designer and a digital marketing professional, each with between three and seven years experience.</p>'
+        +'<a href="https://www.linkedin.com/in/kevin-dell-ova-270431184/">Dell\'Ova Kevin</a><br/>'
+        +'<a href="https://www.linkedin.com/in/florian-scouarnec-7829856a/">Florian Lescouarnec</a><br/>'
+        +'<a href="https://www.linkedin.com/in/vinibch/">Vincent Boucher</a><br/>'
+
+
         +'</div>'
       );
   }
@@ -181,7 +263,6 @@ async function startMain(){
   const inView = totalScroll > header.offsetTop;
   const headerBottom = (header.offsetTop + header.clientHeight); 
   const notScrolledPast = headerBottom < totalScroll;
-  console.log(`${notScrolledPast} ${header.offsetTop} ${header.clientHeight} ${totalScroll}`);
   // add class that 'pops up' headers when scrolled into view.
       if(inView){
       header.classList.add('fadeIntoView');	
@@ -220,10 +301,9 @@ fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR',
   },
 }).then(res => res.json())
 .then(res => {
-  console.log(priceEth = res.USD)
   $(".convert-eth").each(function(){
     //console.log(($(this).data("price")))
-    $(this).html(($(this).data("price"))+" ETH - " +Math.round(($(this).data("price"))*res.USD)+" USD")
+    $(this).html(($(this).data("price"))+" MATIC"/* +Math.round(($(this).data("price"))*res.USD)+" USD"*/)
   })
 });
 
@@ -245,7 +325,8 @@ $("#title-mystic").fadeIn("slow", function() {
    * Créer un mystic de façon aléatoire et l'envoyé vers le contrat intélligent
    */
   async function mint(typeMint) {
-    window.web3 = await Moralis.Web3.enableWeb3();
+    await Moralis.enableWeb3()
+    window.web3 = new Web3(Moralis.provider)
     let connected = await window.web3.eth.net.isListening();
     if(connected == true){
       let abi = await getAbi();
@@ -257,7 +338,7 @@ $("#title-mystic").fadeIn("slow", function() {
       let minted = await contract.methods.mintDelegate(typeMint).send({
         from: ethereum.selectedAddress,
         value:web3.utils.toWei(price, "wei"),
-        gasPrice: '1',
+        //gasPrice: '1',
       }).catch((error)=>{console.log(error)}).then((success)=>{
         console.log(success)
       });
@@ -279,6 +360,11 @@ $("#title-mystic").fadeIn("slow", function() {
    * démarage du jeu après connection, affiché les buttons, connection au contrat puis trouver le mystic et les oeufs de l'user, les affichés, puis envoyé ces datas au serveur node.js
    */
   async function renderGame(){console.log('render')
+      
+    let abi = await getAbi();
+    let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+    window.web3 = await Moralis.Web3.enableWeb3();
+
     $(".unlogged-btn").fadeOut("slow");
 
     $("#contentBody").fadeIn("slow");
@@ -296,9 +382,11 @@ $("#title-mystic").fadeIn("slow", function() {
     }, 1000);
 
 
-    window.web3 = await Moralis.Web3.enableWeb3();
+    await Moralis.enableWeb3()
+    window.web3 = new Web3(Moralis.provider)
+    
     let connected = await window.web3.eth.net.isListening();
-    if(connected == true){console.log('connected')
+    if(connected == true){
       let abi = await getAbi();
       let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
       let mystics = await contract.methods.getAllTokensForUser(ethereum.selectedAddress).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)});
@@ -307,9 +395,9 @@ $("#title-mystic").fadeIn("slow", function() {
       let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
       let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});
 
-      $(".iconic-egg-remain").html("( "+(eggOneRemain)+" / 100 )")
-      $(".rare-egg-remain").html("( "+(eggTwoRemain)+" / 900 )")
-      $(".classic-egg-remain").html("( "+(eggThreeRemain)+" / 9000 )")
+      $(".iconic-egg-remain").html("Buy ( "+(eggOneRemain)+" / 100 )")
+      $(".rare-egg-remain").html("Buy ( "+(eggTwoRemain)+" / 900 )")
+      $(".classic-egg-remain").html("Buy ( "+(eggThreeRemain)+" / 9000 )")
 
       var lastMystic=undefined;
       var lastIdMystic=undefined;
@@ -318,10 +406,8 @@ $("#title-mystic").fadeIn("slow", function() {
       await mystics.forEach((MSTC) => {
         //error map viens d'ici
         contract.methods.getTokenDetails(MSTC).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)}).then((data)=>{
-          if(data.egg==true){console.log('data',data)
+          if(data.egg==true){
             eggs[MSTC] = data;
-            /*if(renderEggs == '') renderEggs += '<div class="row">';
-            renderEggs += renderEgg(MSTC,data,true,ethereum.selectedAddress)*/
           }else{
             lastMystic = data;
             lastIdMystic = MSTC;
@@ -390,7 +476,6 @@ $("#title-mystic").fadeIn("slow", function() {
     let connected = await window.web3.eth.net.isListening();
     if(connected == true){
       renderItemsHtml = '';
-      console.log('items',items)
       await Object.keys(items).forEach((item) => {
         renderItemsHtml += renderItems(item,items[item],true,ethereum.selectedAddress)
       });
@@ -453,7 +538,6 @@ $("#title-mystic").fadeIn("slow", function() {
           invitsSended = res.invitsSended;
           foodByZone = res.mystic.data.foodByZone;
           myMysticData = res.mystic;
-          console.log(res.mystic.data.foods)
           items = res.mystic.data.foods;
           reloadFoodByZone()
         });
@@ -461,7 +545,7 @@ $("#title-mystic").fadeIn("slow", function() {
     }
   }
 
-  async function reloadFoodByZone(){console.log(foodByZone)
+  async function reloadFoodByZone(){
     if(foodByZone!=undefined){
       $('.pop-food').each(function(){
         if(foodByZone[$(this).data("zone")] < Date.now()-60000){
@@ -509,7 +593,7 @@ $("#title-mystic").fadeIn("slow", function() {
         from: ethereum.selectedAddress,
         value:web3.utils.toWei(JSON.parse(mystic.replaceAll("%84", '\"')).price, "ether"),
         to:ethereum.selectedAddress,
-        gasPrice: '1',
+        //gasPrice: '1',
       }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
         fetch('http://localhost:3000/buyOrTransfer', {
             method: 'post',
@@ -537,7 +621,7 @@ $("#title-mystic").fadeIn("slow", function() {
       await contract.methods.paramsMystic(id,sell,egg,invitationToReproduce).send({
         from: ethereum.selectedAddress,
         //gasPrice: '1000000000',//gwei 1
-        gasPrice: '1',
+        //gasPrice: '1',
         //gas: 21000,
         
       }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
@@ -555,9 +639,9 @@ $("#title-mystic").fadeIn("slow", function() {
       let abi = await getAbi();
       let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
       let mystics = await contract.methods.getAllTokensForUser(ethereum.selectedAddress).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)});
-      mystics.forEach(MSTC => {
+      /*mystics.forEach(MSTC => {
         console.log(MSTC.toNumber());
-      });
+      });*/
     }
   }
   
@@ -595,7 +679,6 @@ $("#title-mystic").fadeIn("slow", function() {
   function renderMysticCard(id,data,owned,addr){
     dataStringified = (JSON.stringify(data.mystic).replaceAll("\"", '%84'));
     date = (new Date(data.mystic.createdAt* 1000));
-    console.log(myMysticData)
     //console.log('data',data)
     return '<div class="mb-12 col m-12" >'
       +'<div class="row g-0">'
@@ -641,15 +724,62 @@ $("#title-mystic").fadeIn("slow", function() {
    * @returns 
    */
   function renderEgg(id,data,owned,addr){
+    console.log(data)
+    
+    colorInt = parseInt(data["params8"][0]);
+    if(colorInt == 0)color ="blue"
+    if(colorInt == 1)color ="green"
+    if(colorInt == 2)color ="purple"
+    if(colorInt == 3)color ="red"
+    type1 = parseInt(data["params8"][1]);
+    type1 ="img/eggs/type1/"+color+"/"+(type1+1)+".png"
+    type2 = parseInt(data["params8"][2]);
+    type2 ="img/eggs/type2/"+color+"/"+(type2+1)+".png"
+    type3 = parseInt(data["params8"][3]);
+    type3 ="img/eggs/type3/"+color+"/"+(type3+1)+".png"
+    type4 = parseInt(data["params8"][4]);
+    type4 ="img/eggs/type4/"+color+"/"+(type4+1)+".png"
+    let classType = "layer-egg-classic";
+    if(data["params256"][7]==1){card = $(".card-third");classType = "layer-egg-rare";}
+    if(data["params256"][7]==0){card = $(".card-second");classType = "layer-egg-iconic";}
+    
+    //console.log()
+    /*var rotated = 0;
+    setInterval(() => {
+        var slides = document.getElementsByClassName("eggLayer");
+        for (var i = 0; i < slides.length; i++) {
+            
+            var div = slides[i],
+                deg = rotated ? -randRang(0,6) : randRang(0,6);
+        
+            div.style.webkitTransform = 'rotate('+deg+'deg)'; 
+            div.style.mozTransform    = 'rotate('+deg+'deg)'; 
+            div.style.msTransform     = 'rotate('+deg+'deg)'; 
+            div.style.oTransform      = 'rotate('+deg+'deg)'; 
+            div.style.transform       = 'rotate('+deg+'deg)'; 
+        
+            rotated = !rotated;
+        }
+    }, randRang(2000,4900));*/
+
+
     dataStringified = (JSON.stringify(data).replaceAll("\"", '%84'));
     date = (new Date(data.createdAt* 1000));
     return '<div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">'
     +'<div class="card '+(data.params256[7]==0?"card-second":(data.params256[7]==1?"card-third":("card-fourth")))+'">'
+    +"<div class='eggLayer'>"
+    +'<img loading="lazy" src="img/eggs/egg_color'+(((colorInt+1)+(data["params256"][7]==0||data["params256"][7]==1?0:4)))+'.png" class="layer-egg '+classType+'" alt="mystic">'
+    +'<img loading="lazy" src="'+type4+'" class="layer-egg" style="opacity:0.5;" alt="mystic">'
+    +'<img loading="lazy" src="'+type3+'" class="layer-egg" style="opacity:0.8;" alt="mystic">'
+    +'<img loading="lazy" src="'+type2+'" class="layer-egg" alt="mystic">'
+    +'<img loading="lazy" src="'+type1+'" class="layer-egg" style="opacity:0.8;" alt="mystic">'
+    +'</div>'
+    +"<div>"
       +'<div class="content">'
         +'<h3 class="title">'+(data.params256[7]==0?"Iconic Egg":(data.params256[7]==1?"Rare Egg":("Classic Egg")))+'</h3>'
         +'<p class="copy">#'+id+'</p>'
-        +'<span></span>'
-        +'<button class="btn iconic-egg-remain"></button>'
+        +'<span>An egg that seems to be as soft as it is restless</span>'
+        //+'<button class="btn iconic-egg-remain"></button>'
       +'</div>'
       +'</div>'
     +'</div>'
@@ -691,7 +821,7 @@ $("#title-mystic").fadeIn("slow", function() {
    * @param {*} owned 
    * @returns 
    */
-  function renderItems(id,data,owned,addr){console.log(data)
+  function renderItems(id,data,owned,addr){
     return '<div class="mb-12 col m-12">'
       +'<div class="row g-0">'
         +'<div class="col-md-4">'
@@ -714,7 +844,7 @@ $("#title-mystic").fadeIn("slow", function() {
   /**
    * Faire un appel au server node.js pour nourrir le mystic
    */
-  async function feed(food){console.log('feed')
+  async function feed(food){
     let connected = await window.web3.eth.net.isListening();
     if(connected == true){
       fetch('http://localhost:3000/feed', {
@@ -920,7 +1050,7 @@ $("#title-mystic").fadeIn("slow", function() {
             //contract.methods.addSubInvitation(myMysticId, 0, false).send({
             contract.methods.paramsMystic(myMysticId,myMystic.sell,myMystic.egg,0).send({
               from: ethereum.selectedAddress,
-              gasPrice: '1',
+              //gasPrice: '1',
             }).catch((error)=>{console.log('error transfer',error)}).then((invit)=>{
     
               fetch('http://localhost:3000/deleteInvitSended', {
