@@ -1,7 +1,7 @@
 /** Connect to Moralis server */
 //Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
 const serverUrl = "https://9rotklamvhur.usemoralis.com:2053/server";
-const appId = "YsHmEnYCWJrVMysXSmrdIwsp0MJsna1K0bsXgben";
+const appId = "32qjS96gLON4ZUxrPSXbqM73w1h3HGDpFlbQ9tMM";
 const CONTRACT_ADDRESS = "0xb2000CB13790af91a69c639fdc64d6cB05EEE159";
 
 var myMysticId = undefined;
@@ -9,7 +9,7 @@ startMain();
 
 
 async function startMain(){
-  Moralis.start({ serverUrl, appId });
+  //Moralis.start({ serverUrl, appId });
 
   //$("#contentBody").fadeOut("slow");
   document.getElementById("btn-login").onclick = login;
@@ -17,14 +17,14 @@ async function startMain(){
   document.getElementById("btn-logout").onclick = logOut;
 
   
-  window.web3 = await Moralis.Web3.enableWeb3();
-  console.log(window.web3)
+  //window.web3 = await Moralis.Web3.enableWeb3();
+  /*console.log(window.web3)
   let abi = await getAbi();
   console.log(web3.eth)
   let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
   let eggOneRemain = await contract.methods.getParamsContract("eggOneRemain").call({from: ethereum.selectedAddress});
   let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
-  let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});
+  let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});*/
 
   $(".iconic-egg-remain").html("( "+(eggOneRemain)+" / 100 )")
   $(".rare-egg-remain").html("( "+(eggTwoRemain)+" / 900 )")
