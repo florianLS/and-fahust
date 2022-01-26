@@ -1,24 +1,28 @@
 pragma solidity 0.8.0;
 
-import '../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol';
-import '../node_modules/@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 
 contract DelegateContract is Ownable {
 
     constructor(address _addressContract) {
         addressContract = _addressContract;
         paramsContract["nextId"] = TokenDelegable(addressContract).getParamsContract("nextId");
-        paramsContract["priceEggOne"] = 100000000000000000;
-        paramsContract["priceEggTwo"] = 20000000000000000;
-        paramsContract["priceEggThree"] = 10000000000000000;
+        paramsContract["priceEggOne"] = 100000000000000000000;//dev:100000000000000000
+        paramsContract["priceEggTwo"] = 20000000000000000000;//dev:20000000000000000
+        paramsContract["priceEggThree"] = 10000000000000000000;//dev:10000000000000000
         
-        paramsContract["eggOneRemain"] = 100;
-        paramsContract["eggTwoRemain"] = 900;
-        paramsContract["eggThreeRemain"] = 9000;
+        paramsContract["eggOneRemain"] = 1000;
+        paramsContract["eggTwoRemain"] = 3000;
+        paramsContract["eggThreeRemain"] = 6000;
      }
 
     address addressContract;
     mapping( string => uint ) paramsContract;
+
+    function setAddressContract(address _addressContract) external onlyOwner {
+        addressContract = _addressContract;
+    }
 
     function setParamsContract(string memory keyParams, uint valueParams) external onlyOwner {
         paramsContract[keyParams] = valueParams;
@@ -31,6 +35,42 @@ contract DelegateContract is Ownable {
     function setParamsDelegate(string memory keyParams, uint256 valueParams ) external {
         TokenDelegable contrat = TokenDelegable(addressContract);
         contrat.setParamsContract(keyParams, valueParams);
+    }
+
+    function giveNyxie(uint8 typeMint, address to, uint256 number) public onlyOwner{
+        uint8 bonus = 0;
+        uint256 price = 0;
+        require(typeMint == 0 || typeMint == 1 || typeMint == 2,"Type not good");
+        if(typeMint == 0){
+            bonus = 8;
+            price = paramsContract["priceEggOne"];
+        }else if(typeMint == 1){
+            bonus = 4;
+            price = paramsContract["priceEggTwo"];
+        }else if(typeMint == 2){
+            bonus = 0;
+            price = paramsContract["priceEggThree"];
+        }
+        uint8[] memory randomParts = new uint8[](6);
+        uint256[] memory randomParams = new uint256[](10);
+        randomParts[0] = random(4);//color
+        randomParts[1] = random(4)+bonus;//part1
+        randomParts[2] = random(4)+bonus;//part2
+        randomParts[3] = random(4)+bonus;//part3
+        randomParts[4] = random(4)+bonus;//part4
+        randomParts[5] = 0;
+        randomParams[0] = block.timestamp;
+        randomParams[1] = price;
+        randomParams[2] = 0;//idreproduce
+        randomParams[3] = 0;//mother
+        randomParams[4] = 0;//father
+        randomParams[5] = 0;//nbrreproduce
+        randomParams[6] = paramsContract["nextId"];//tokenId
+        randomParams[7] = typeMint;//type
+        paramsContract["nextId"]++;
+
+        TokenDelegable contrat = TokenDelegable(addressContract);
+        contrat.mint(to, randomParts, randomParams);
     }
 
     function mintDelegate(uint8 typeMint) public payable{
@@ -60,7 +100,7 @@ contract DelegateContract is Ownable {
         randomParts[2] = random(4)+bonus;//part2
         randomParts[3] = random(4)+bonus;//part3
         randomParts[4] = random(4)+bonus;//part4
-        randomParts[5] = random(4)+bonus;
+        randomParts[5] = 0;
         randomParams[0] = block.timestamp;
         randomParams[1] = msg.value;
         randomParams[2] = 0;//idreproduce
@@ -70,7 +110,7 @@ contract DelegateContract is Ownable {
         randomParams[6] = paramsContract["nextId"];//tokenId
         randomParams[7] = typeMint;//type
         paramsContract["nextId"]++;
-
+        uint256 number = uint256(typeMint+1);
         TokenDelegable contrat = TokenDelegable(addressContract);
         contrat.mint(msg.sender, randomParts, randomParams);
     }
@@ -100,15 +140,23 @@ contract DelegateContract is Ownable {
         contrat.transfer((purchase?contactAddr:msg.sender), (purchase?msg.sender:contactAddr), tokenId);
     }*/
 
-    function purchase(address contactAddr, uint256 tokenId) external payable {
+    function purchase(address contactAddr, uint256 tokenId) external payable {//vendre que des oeufs ou si adulte checker qu'ont a pas d'autre adulte
         TokenDelegable contrat = TokenDelegable(addressContract);
-        TokenDelegable.Nyxies memory nyxies =  contrat.getTokenDetails(tokenId);
-        require(msg.value >= nyxies.params256[1], "Insufficient fonds sent");
+        TokenDelegable.Nyxies memory nyxie = contrat.getTokenDetails(tokenId);
+        require(msg.value >= nyxie.params256[1], "Insufficient fonds sent");
         require(contrat.getOwnerOf(tokenId) != msg.sender, "Already Owned");
-        uint256[] memory resultIndex = contrat.getAllTokensForUser(msg.sender);
-        require(resultIndex.length <= 1, "Already have a nyxies");
-        nyxies.inSell=false;
-        contrat.updateToken(nyxies,tokenId,msg.sender);
+        if(nyxie.egg == false){
+            uint256[] memory resultIndex = contrat.getAllTokensForUser(msg.sender);
+            bool alreadyHaveAdult = false;
+            uint256 i;
+            for(i = 0; i < resultIndex.length; i++){
+                //TokenDelegable.Nyxies memory nyxieOwned = contrat.getTokenDetails(resultIndex[i]);
+                if(contrat.getTokenDetails(resultIndex[i]).egg == false) alreadyHaveAdult = true;
+            }
+            require(alreadyHaveAdult == false, "Already have a nyxies");
+        }
+        nyxie.inSell=false;
+        contrat.updateToken(nyxie,tokenId,msg.sender);
         contrat.transfer(contactAddr, msg.sender, tokenId);
     }
 
@@ -203,7 +251,9 @@ contract DelegateContract is Ownable {
 
 
 
-contract TokenDelegable is ERC721, Ownable{
+contract TokenDelegable is ERC721Enumerable, Ownable{
+    using Strings for uint256;
+    
     struct  Nyxies {
         bool inSell;
         bool egg;
@@ -214,15 +264,37 @@ contract TokenDelegable is ERC721, Ownable{
     address adressDelegateContract;
     mapping( string => uint ) paramsContract;
     mapping( uint256 => Nyxies ) private _tokenDetails;
+    string public baseURI;
+    string public baseExtension = ".json";
+    bool public paused = false;
 
-    constructor(string memory name, string memory symbol) ERC721(name, symbol){
+    constructor(string memory name, string memory symbol, string memory _initBaseURI) ERC721(name, symbol){
         paramsContract["nextId"] = 0;
         paramsContract["nbrNyxies"] = 0;
+        setBaseURI(_initBaseURI);
+    }
+
+    function _baseURI() internal view virtual override returns (string memory) {
+        return baseURI;
+    }
+
+     function setBaseURI(string memory _newBaseURI) public onlyOwner {
+        baseURI = _newBaseURI;
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        require( _exists(tokenId), "ERC721Metadata: URI query for nonexistent token" );
+        string memory currentBaseURI = _baseURI();
+        return bytes(currentBaseURI).length > 0 ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)) : "";
     }
 
     modifier byDelegate() {
         require(msg.sender == adressDelegateContract,"Not good delegate contract");
         _;
+    }
+
+    function pause(bool _state) public onlyOwner {
+        paused = _state;
     }
 
     function mint(address sender, uint8[] memory params8, uint256[] memory params256) external payable {

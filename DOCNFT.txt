@@ -16,3 +16,6 @@ Pour mieux comprendre solidity voici des supers video simple sur les trucs de ba
 Pour faire des faux comptes avec genre 100 ETH utilise ganach, c'est trop bien
 
 Tu devra surtout comprendre ces variable ownerOf(), payable, uint8 , uint256, public view returns , memory , msg.value , msg.sender
+
+TOKENCONTRACT : 0xfB68d56954f011C3Ea24691df9BEf073C8a78F51
+DELEGATECONTRACT : 0xaC84A40eC35f0ae77aD22A08E1E3c6D280644b5b
