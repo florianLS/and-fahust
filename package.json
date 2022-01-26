@@ -11,7 +11,8 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.1",
     "@truffle/hdwallet-provider": "^2.0.1",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "merge-images-v2": "^2.0.1"
   },
   "devDependencies": {
     "truffle-plugin-verify": "^0.5.21"

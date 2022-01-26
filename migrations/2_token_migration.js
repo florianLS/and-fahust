@@ -13,12 +13,13 @@ function randRang(min, max) {
 }
 
 module.exports = async function (deployer) {
-  await deployer.deploy(TokenDelegable, "MYSTIC","MSTC");
+  await deployer.deploy(TokenDelegable, "MYSTIC","MSTC","https://tam.nyxiesnft.com/img/generated/");
   let TokenDelegableInstance = await TokenDelegable.deployed();
   await deployer.deploy(DelegateContract, TokenDelegableInstance.address);
   //console.log(tokenInstance.address)
   let DelegateContractInstance = await DelegateContract.deployed();
   TokenDelegableInstance.setAdressDelegateContract(DelegateContractInstance.address)
+  //await DelegateContractInstance.giveNyxie(0,"0x400919F8f5740436d1A1769bC241477275C61545"); // Token id 0
   //await tokenInstance.mint(1); // Token id 0
   //await tokenInstance.reproduce([1,2,1,0,1,3],0, [1,2,1,0,1,3], "0x400919F8f5740436d1A1769bC241477275C61545", 1);
   //let mystic = await tokenInstance.getTokenDetails(0);
