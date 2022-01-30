@@ -19,3 +19,38 @@ Tu devra surtout comprendre ces variable ownerOf(), payable, uint8 , uint256, pu
 
 TOKENCONTRACT : 0xfB68d56954f011C3Ea24691df9BEf073C8a78F51
 DELEGATECONTRACT : 0xaC84A40eC35f0ae77aD22A08E1E3c6D280644b5b
+
+
+
+Bonjour Dana,
+
+
+
+Je suis actuellement en train de quitter mon entreprise après 2 ans et demi de bons et loyaux services pour découvrir de nouveaux horizons et je m'intéresse fortement aux offres d'emploi autour de la blockchain.
+
+
+
+J'ai actuellement 7 ans d'expérience dans le développement web ainsi que 1 an et demi d'apprentissage personnel dans la blockchain (cela me passionne et je maîtrise déjà fortement le sujet).
+
+
+
+Je maîtrise solidity, node js, react (et react native), nosql, ainsi que les bases (php, html, css, sql).
+
+
+
+J'aimerais vous demander avant de rentrer dans les détails autour de combien situez vos offres de salaires ?
+
+
+
+Avantages ? (ticket restaurant, pass navigo, baby foot ? ^^)
+
+
+
+35 heures par semaines, ou bien RTT pour les heures supplémentaires ?
+
+
+
+Entreprise sympathique où il fait bon vivre ?
+
+
+Merci d'avoir pris le temps de me lire, bonne journée !

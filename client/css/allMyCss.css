@@ -113,7 +113,13 @@
     padding: 1rem;
     transition: transform var(--d) var(--e);
     z-index: 1;
+    text-align: justify;
 }
+.content:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+  }
 .content > * + * {
     margin-top: 1rem;
 }
@@ -121,12 +127,14 @@
     font-size: 1.3rem;
     font-weight: bold;
     line-height: 1.2;
+    text-shadow: black 1px 0 10px;
 }
 .copy {
     font-family: var(--font-serif);
     font-size: 1.125rem;
     font-style: italic;
     line-height: 1.35;
+    text-shadow: black 1px 0 10px;
 }
 .btn {
     cursor: pointer;
@@ -1151,4 +1159,109 @@ background-repeat: no-repeat;
         }
     }
 
-    
+    /* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+
+  select {
+	/* Reset */
+	 appearance: none;
+	 border: 0;
+	 outline: 0;
+	 font: inherit;
+	/* Personalize */
+	 width: 20em;
+	 height: 3em;
+	 padding: 0 4em 0 1em;
+	 background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg) no-repeat right 0.8em center / 1.4em, linear-gradient(to left, rgba(255, 255, 255, 0.3) 3em, rgba(255, 255, 255, 0.2) 3em);
+	 color: white;
+	 border-radius: 0.25em;
+	 box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+	 cursor: pointer;
+	/* <option> colors */
+	/* Remove focus outline */
+	/* Remove IE arrow */
+}
+ select option {
+	 color: inherit;
+	 background-color: #320a28;
+     font-size: 18px;
+}
+ select:focus {
+	 outline: none;
+}
+ select::-ms-expand {
+	 display: none;
+}
+ 
+
+.span-defaut{
+    width:100%;
+    margin-left:0;
+    margin-right:0;
+    font-size: 15px;
+    margin:5px;
+    color:#faffd7;
+    text-shadow: black 1px 0 10px;
+    text-align: center;
+}

@@ -13,6 +13,7 @@ function btw2v(val1,val2){//between two value
 var listConnection = {};
 var allUsers = {};
 var allMystics = {};
+var allEggsData = {};
 var newMysticData = {
     exp:0,
     expMax:100,
@@ -110,6 +111,29 @@ app.use(function (req, res, next) {
     next();
 });
 
+
+/**
+ * A la connection de l'user, enregistrer son mystic
+ */
+ app.post('/mintEgg', (req, res) => {
+    Object.keys(req.body).forEach(egg => {
+        if (fs.existsSync("eggs/"+egg+".json")) {
+            fs.readFile("eggs/"+egg+".json", (err, data) => {
+                if (err) throw err;mystic = JSON.parse(data);
+                mysticTemp = {"mystic":req.body[egg],"data":mystic.data/*,"addr":req.body.addr*/};
+                allEggsData[egg] = mysticTemp
+                fs.writeFile("eggs/"+egg+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
+                //res.send(JSON.stringify({invitsReceive:invitsReceive,invitsSended:invitsSended,mystic:mysticTemp}));
+            });
+        }else{
+            mysticTemp = {"mystic":req.body[egg],"data":newMysticData/*,"addr":req.body.addr*/};
+            allEggsData[egg] = mysticTemp;
+            fs.writeFile("eggs/"+egg+".json", JSON.stringify(mysticTemp), (err) => {if (err) throw err;});
+            //res.send(JSON.stringify({invitsReceive:invitsReceive,invitsSended:invitsSended,mystic:mysticTemp}));
+        }
+    });
+ })
+
 /**
  * A la connection de l'user, enregistrer son mystic
  */
@@ -202,22 +226,43 @@ function partsPoints(part){//max 24
  * PARTIE RECHERCHE
  */
  app.post('/filterMystics', (req, res) => {
-    res.send(Object.keys(allMystics).filter(myst => {
-        var date = (new Date(allMystics[myst].mystic.createdAt* 1000));
+     
+    //var arrayReturn = req.body.egg==true?allEggsData:allMystics[Object.keys(req.body.egg==true?allEggsData:allMystics)
+    let arrayReturn = {};
+    let number = -1;
+    var arrayFilter = Object.keys(allEggsData).filter(myst => {//console.log(myst)
+        //console.log((req.body.egg==true?allEggsData:allMystics)[myst])
+        
+        var data = (req.body.egg==true?allEggsData:allMystics);
+        var date = (new Date(data[myst].mystic.mystic.params256[0]* 1000));
         var seconds = Math.floor((new Date() - date) / 1000);
         month = seconds / 2592000;
-        return ((req.body.egg == true && allMystics[myst].mystic.egg == 1) || (req.body.egg == false && allMystics[myst].mystic.egg == 0)) &&
-        (req.body.parts[0] == undefined || (req.body.parts[0] != undefined && req.body.parts[0] == allMystics[myst].mystic.parts[0])) && //beak
-        (req.body.parts[1] == undefined || (req.body.parts[1] != undefined && req.body.parts[1] == allMystics[myst].mystic.parts[1])) && //eye
-        (req.body.parts[2] == undefined || (req.body.parts[2] != undefined && req.body.parts[2] == allMystics[myst].mystic.parts[2])) && //ears
-        (req.body.parts[3] == undefined || (req.body.parts[3] != undefined && req.body.parts[3] == allMystics[myst].mystic.parts[3])) && //horn
-        (req.body.parts[4] == undefined || (req.body.parts[4] != undefined && req.body.parts[4] == allMystics[myst].mystic.parts[4])) && //color
-        (req.body.parts[5] == undefined || (req.body.parts[5] != undefined && req.body.parts[5] == allMystics[myst].mystic.parts[5])) && //body
-        (req.body.breedCountMin == 0 || (req.body.breedCountMin != 0 && req.body.breedCountMin <= allMystics[myst].mystic.numberReproduce)) && //breedCountMin
-        (req.body.breedCountMax == 3 || (req.body.breedCountMax != 3 && req.body.breedCountMax >= allMystics[myst].mystic.numberReproduce)) && //breedCountMax
+        //console.log((((parseInt(data[myst].mystic.mystic.params8[0])+1)+(parseInt(data[myst].mystic.mystic["params256"][7])==2||parseInt(data[myst].mystic.mystic["params256"][7])==1?0:4))))
+        var filter = ((req.body.egg == true && data[myst].mystic.mystic.egg == true) || (req.body.egg == false && data[myst].mystic.mystic.egg == true))
+        
+        && (req.body.parts['0'] == '0' || (req.body.parts['0'] != '0' && req.body.parts['0'] == parseInt(
+            
+            (((parseInt(data[myst].mystic.mystic.params8[0])+1)+(parseInt(data[myst].mystic.mystic["params256"][7])==2||parseInt(data[myst].mystic.mystic["params256"][7])==1?0:4)))
+        )))  //beak
+        &&(req.body.parts['1'] == '0' || (req.body.parts['1'] != '0' && req.body.parts['1'] == parseInt(data[myst].mystic.mystic.params8[1])))  //eye
+        &&(req.body.parts['2'] == '0' || (req.body.parts['2'] != '0' && req.body.parts['2'] == parseInt(data[myst].mystic.mystic.params8[2])))  //ears
+        &&(req.body.parts['3'] == '0' || (req.body.parts['3'] != '0' && req.body.parts['3'] == parseInt(data[myst].mystic.mystic.params8[3])))  //horn
+        &&(req.body.parts['4'] == '0' || (req.body.parts['4'] != '0' && req.body.parts['4'] == parseInt(data[myst].mystic.mystic.params8[4])))  //color
+        &&(req.body.insell == (data[myst].mystic.mystic.inSell== true?1:0)) //insell
+         /*&& //body
+        (req.body.breedCountMin == 0 || (req.body.breedCountMin != 0 && req.body.breedCountMin <= (req.body.egg==true?allEggsData:allMystics)[myst].mystic.numberReproduce)) && //breedCountMin
+        (req.body.breedCountMax == 3 || (req.body.breedCountMax != 3 && req.body.breedCountMax >= (req.body.egg==true?allEggsData:allMystics)[myst].mystic.numberReproduce)) && //breedCountMax
         (req.body.ageMinMonth == 0 || (req.body.ageMinMonth != 0 && req.body.ageMinMonth <= month)) && //ageMinMonth
-        (req.body.ageMaxMonth == 12 || (req.body.ageMaxMonth != 12 && req.body.ageMaxMonth >= month))  //ageMaxMonth
-    }))
+        (req.body.ageMaxMonth == 12 || (req.body.ageMaxMonth != 12 && req.body.ageMaxMonth >= month))  *///ageMaxMonth
+        //if(filter == true)
+        if(filter == true) number++;
+        
+        return (filter&& number >= (parseInt(req.body.page)*6)-6 && number < (parseInt(req.body.page)*6));
+    })
+    arrayFilter.forEach(element => {
+        arrayReturn[element] = allEggsData[element];
+    });
+    res.send(arrayReturn)
 })
 
 
@@ -434,7 +479,7 @@ function load(){
           process.exit(1);
         }
       
-        files.forEach(function (file, index) {console.log(file)
+        files.forEach(function (file, index) {console.log('load file',file)
             if (fs.existsSync("mystics/"+file)) {
                 fs.readFile("mystics/"+file, (err, data) => {
                     if (err) throw err;mystic = JSON.parse(data);
@@ -444,6 +489,24 @@ function load(){
             }
         });
       });
+
+      fs.readdir("eggs", function (err, files) {
+          if (err) {
+            console.error("Could not list the directory.", err);
+            process.exit(1);
+          }
+        
+          files.forEach(function (file, index) {
+              if (fs.existsSync("eggs/"+file)) {
+                  fs.readFile("eggs/"+file, (err, data) => {
+                      if (err) throw err;egg = JSON.parse(data);
+                      allEggsData[egg.mystic.mystic.params256[6]] = egg
+                      //console.log('load file',Object.keys(allEggsData))
+                      //console.log(allMystics)
+                  });
+              }
+          });
+        });
 
 
       /*
