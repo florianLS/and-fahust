@@ -554,51 +554,51 @@ $("#title-mystic").fadeIn("fast", function() {
   /**
    * acheter un mystic en chequant d'abord si il est en vente
    */
-//   async function buy(addrSeller,mystic,id){
-//     let connected = await window.web3.eth.net.isListening();
-//     if(connected == true){
-//       let abi = await getAbi();
-//       let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
-//       let buyVar = await contract.methods.purchase(addrSeller,id).send({
-//         from: ethereum.selectedAddress,
-//         value:web3.utils.toWei(JSON.parse(mystic.replaceAll("%84", '\"')).price, "ether"),
-//         to:ethereum.selectedAddress,
-//         //gasPrice: '1',
-//       }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
-//         fetch('http://localhost:3000/buyOrTransfer', {
-//             method: 'post',
-//             headers: {
-//               'Accept': 'application/json, text/plain, */*',
-//               'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ "addrBuyer": ethereum.selectedAddress,"addrSeller": addrSeller})
-//           }).then(res => res.json())
-//             .then(res => {
-//               renderGame()
-//             });
-//       });
-//     }
-//   }
+  async function buy(addrSeller,mystic,id){
+    let connected = await window.web3.eth.net.isListening();
+    if(connected == true){
+      let abi = await getAbi();
+      let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+      let buyVar = await contract.methods.purchase(addrSeller,id).send({
+        from: ethereum.selectedAddress,
+        value:web3.utils.toWei(JSON.parse(mystic.replaceAll("%84", '\"')).price, "ether"),
+        to:ethereum.selectedAddress,
+        //gasPrice: '1',
+      }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
+        fetch('http://localhost:3000/buyOrTransfer', {
+            method: 'post',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "addrBuyer": ethereum.selectedAddress,"addrSeller": addrSeller})
+          }).then(res => res.json())
+            .then(res => {
+              renderGame()
+            });
+      });
+    }
+  }
 
   /**
    * mettre en vente votre mystic ou vos oeufs
    */
-//   async function paramsMystic(id,sell,egg,invitationToReproduce){
-//     let connected = await window.web3.eth.net.isListening();
-//     if(connected == true){
-//       let abi = await getAbi();
-//       let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
-//       await contract.methods.paramsMystic(id,sell,egg,invitationToReproduce).send({
-//         from: ethereum.selectedAddress,
-//         //gasPrice: '1000000000',//gwei 1
-//         //gasPrice: '1',
-//         //gas: 21000,
+  async function paramsMystic(id,sell,egg,invitationToReproduce){
+    let connected = await window.web3.eth.net.isListening();
+    if(connected == true){
+      let abi = await getAbi();
+      let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+      await contract.methods.paramsMystic(id,sell,egg,invitationToReproduce).send({
+        from: ethereum.selectedAddress,
+        //gasPrice: '1000000000',//gwei 1
+        //gasPrice: '1',
+        //gas: 21000,
         
-//       }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
-//         renderGame()
-//       });
-//     }
-//   }
+      }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
+        renderGame()
+      });
+    }
+  }
 
   /**
    * récupérer tous les token d'un utilisateur

@@ -4,7 +4,7 @@
 //Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
 const serverUrl = "https://9rotklamvhur.usemoralis.com:2053/server";
 const appId = "32qjS96gLON4ZUxrPSXbqM73w1h3HGDpFlbQ9tMM";
-const CONTRACT_ADDRESS = "0x15E6b4129b56DC90b3409C3630a8Dddca3015e8C";
+const CONTRACT_ADDRESS = "0x389dD6AfDD717A0e2B76FF0Eda58b68aBc361a02";
 //DEV : 0x4EfC6600b04b14d786Fd0fc77790ca2f68335518
 //PROD : 0xaC84A40eC35f0ae77aD22A08E1E3c6D280644b5b
 
@@ -179,6 +179,25 @@ function eggRenderImg(type){
 
 }
 
+/**
+ * 
+ */
+function idPartsToNameParts(id){
+  if(id == 0){ return "Common";}else
+  if(id == 1){ return "Uncommon";}else
+  if(id == 2){ return "Curiosity";}else
+  if(id == 3){ return "Rare";}else
+  if(id == 4){ return "Anomaly";}else
+  if(id == 5){ return "Irregularity";}else
+  if(id == 6){ return "Improbable";}else
+  if(id == 7){ return "Absurd";}else
+  if(id == 8){ return "Fantastic";}else
+  if(id == 9){ return "Exotic";}else
+  if(id == 10){ return "Wonder";}else
+  if(id == 11){ return "Incredible";}else
+  {return "Unbelievable"}
+}
+
 
 
 /**
@@ -221,19 +240,19 @@ function generateMetaData(egg,id){
         },
         {
             "trait_type": "ears",
-            "value": egg.params8[1]
+            "value": idPartsToNameParts(egg.params8[1])
         },
         {
             "trait_type": "horn",
-            "value": egg.params8[2]
+            "value": idPartsToNameParts(egg.params8[2])
         },
         {
             "trait_type": "mouth",
-            "value": egg.params8[3]
+            "value": idPartsToNameParts(egg.params8[3])
         },
         {
             "trait_type": "eyes",
-            "value": egg.params8[4]
+            "value": idPartsToNameParts(egg.params8[4])
         }
     ]
 }
@@ -247,12 +266,12 @@ function generateMetaData(egg,id){
  * @param {*} id 
  */
 async function sendToServerMeta(egg,id){
+  await saveImageEgg(egg,id);
   var meta = generateMetaData(egg,id);
   var allMeta = await getMeta();
   allMeta.push(meta)
   var formData = new FormData();
-  saveImageEgg(egg,id);
-  setTimeout(() => {
+  await setTimeout(() => {
     formData.append('base64', canvas.toDataURL("image/png") );
     formData.append('id', id);
     formData.append('allMeta', JSON.stringify(allMeta));
@@ -261,10 +280,10 @@ async function sendToServerMeta(egg,id){
     fetch('saveFile.php', {
         method: 'POST',
         body: formData,
-      }).then(res => res.json())
+      })/*.then(res => res.json())
       .then(res => {console.log(res)
-      });
-  }, 2000);
+      });*/
+  }, 1000);
 }
 
 /**
@@ -273,8 +292,7 @@ async function sendToServerMeta(egg,id){
  * @param {*} id 
  */
 function saveImageEgg(egg,id){
-  var type=0;
-  console.log(egg["params256"][7])
+  //console.log(egg["params256"][7])
   colorInt = parseInt(egg["params8"][0]);
   if(colorInt == 0)color ="blue"
   if(colorInt == 1)color ="green"
@@ -282,10 +300,10 @@ function saveImageEgg(egg,id){
   if(colorInt == 3)color ="red"
   img0 = loadImage('img/ilu_bg.webp', main);
   img1 = loadImage('img/eggs/egg_color'+(((colorInt+1)+((egg["params256"][7])==2||(egg["params256"][7])==1?0:4)))+'.webp', main);//
-  img2 = loadImage('img/eggs/type1/'+color+'/'+egg.params8[1]+'.webp', main);
-  img3 = loadImage('img/eggs/type2/'+color+'/'+egg.params8[2]+'.webp', main);
-  img4 = loadImage('img/eggs/type3/'+color+'/'+egg.params8[3]+'.webp', main);
-  img5 = loadImage('img/eggs/type4/'+color+'/'+egg.params8[4]+'.webp', main);
+  img2 = loadImage('img/eggs/type1/'+color+'/'+(parseInt(egg.params8[1])+1)+'.webp', main);
+  img3 = loadImage('img/eggs/type2/'+color+'/'+(parseInt(egg.params8[2])+1)+'.webp', main);
+  img4 = loadImage('img/eggs/type3/'+color+'/'+(parseInt(egg.params8[3])+1)+'.webp', main);
+  img5 = loadImage('img/eggs/type4/'+color+'/'+(parseInt(egg.params8[4])+1)+'.webp', main);
 }
 
 function main() {
@@ -505,14 +523,14 @@ $("#title-mystic").fadeIn("fast", function() {
       let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
       let mystics = await contract.methods.getAllTokensForUser(ethereum.selectedAddress).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)});
 
-      console.log('mystics',mystics)
+      /*console.log('mystics',mystics)
 
       mystics.forEach((MSTC) => {
         //error map viens d'ici
         contract.methods.getTokenDetails(MSTC).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)}).then((data)=>{
           sendToServerMeta(data,MSTC)
         });
-      })
+      })*/
     }
   }
 
@@ -544,11 +562,12 @@ $("#title-mystic").fadeIn("fast", function() {
     setTimeout(() => {
       let parent = $("#btn-log-meta").parent();
       $("#btn-log-meta").html("Your Eggs")
+      $('<button onclick="allEggs()" id="btn-log-meta" class="btn" data-toggle="modal" data-target="#Modal">All Eggs</button>').insertAfter("#btn-log-meta")
       $("#btn-log-meta").attr('data-toggle', 'modal')
       $("#btn-log-meta").attr('data-target', '#Modal')
       parent.find("h3").html('Nest')
       parent.find("p").html('Explore your nest and look at your previously purchased eggs')
-      document.getElementById("btn-log-meta").onclick = allEggs;
+      document.getElementById("btn-log-meta").onclick = allMyEggs;
     }, 1000);
 
 
@@ -573,11 +592,21 @@ $("#title-mystic").fadeIn("fast", function() {
       var lastIdMystic=undefined;
       $("#myMystics").html('');
       //renderEggs = '';
+      var eggsData = {};
+      var timeOut = 1;
       await mystics.forEach((MSTC) => {
         //error map viens d'ici
+        
         contract.methods.getTokenDetails(MSTC).call({from: ethereum.selectedAddress}).catch((error)=>{console.log(error)}).then((data)=>{
+          timeOut++
+          setTimeout(() => {
+            sendToServerMeta(data,MSTC)
+          }, 2000*timeOut);
+          //break;//A DEGAGER
           if(data.egg==true){
+            data = setDefaut(data)
             eggs[MSTC] = data;
+            eggsData[MSTC] = ({ "addr": ethereum.selectedAddress, "mystic": {params256:data.params256,params8:data.params8,egg:data.egg,inSell:data.inSell}})
           }else{
             lastMystic = data;
             lastIdMystic = MSTC;
@@ -587,9 +616,11 @@ $("#title-mystic").fadeIn("fast", function() {
         });
       })
 
+
       setTimeout(() => {
+        mintEggToNodeServer(eggsData)
         if(lastMystic){
-          mintToNodeServer(lastMystic,lastIdMystic)
+          //mintToNodeServer(lastMystic,lastIdMystic)
           $(".born").remove()
           $('#nest-egg').fadeIn("fast")
           $('#mail-box').fadeIn("fast")
@@ -611,13 +642,31 @@ $("#title-mystic").fadeIn("fast", function() {
     }
   }
 
+  
+  async function mintEggToNodeServer(eggs){
+    let connected = await window.web3.eth.net.isListening();
+    if(connected == true){
+        //console.log({ "addr": ethereum.selectedAddress, "mystic": {createdAt:mystic.params256[0],invitsSended:mystic.params256[2],numberReproduce:mystic.params256[5],parts:mystic.params8,price:mystic.params256[1],id:mystic.params256[6],egg:mystic.egg,inSell:mystic.inSell}})
+        fetch('http://localhost:3000/mintEgg', {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eggs)
+        }).then(res => res.json())
+        .then(res => {
+        });
+    }
+  }
+
   function myMysticModal(){
     var myMisticRender = renderMysticCard(myMysticId,{mystic:myMystic},true,ethereum.selectedAddress);
       $(".modal-title").html("My Mystic");
       $(".modal-body").html(myMisticRender);
   }
 
-  async function allEggs(){
+  async function allMyEggs(){
     $(".modal-title").html("My Eggs");
     $(".modal-body").html("");
     let connected = await window.web3.eth.net.isListening();
@@ -628,6 +677,122 @@ $("#title-mystic").fadeIn("fast", function() {
       });
       $(".modal-body").html(renderEggs);
     }
+  }
+
+  async function allEggs(){
+    $(".modal-title").html("All Eggs");
+    $(".modal-body").html("");
+    let connected = await window.web3.eth.net.isListening();
+    if(connected == true){
+      let optionSelect = '<option value="1">Common</option>'
+      +  '<option value="2">Uncommon blue</option>'
+      +  '<option value="3">Curiosity</option>'
+      +  '<option value="4">Rare</option>'
+      +  '<option value="5">Anomaly</option>'
+      +  '<option value="6">Irregularity</option>'
+      +  '<option value="7">Improbable</option>'
+      +  '<option value="8">Absurd</option>'
+      +  '<option value="9">Fantastic</option>'
+      +  '<option value="10">Exotic</option>'
+      +  '<option value="11">Wonder</option>'
+      +  '<option value="12">Incredible</option>';
+      renderEggs = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">'
+
+      /*+ '<label class="switch">'
+      +'<input type="checkbox">'
+      +'<span class="slider round"></span>'
+      +'</label>'*/
+      
+      +'<select style="margin-top:50px" id="insell" onchange="fetchAllEggsFilter()">'
+      + '<option selected value="1">In sell</option>'
+      + '<option value="0">Not in sell</option>'
+      +'</select>'
+
+      +'<select style="margin-top:20px;" id="select-color" onChange="fetchAllEggsFilter()">'
+      +  '<option selected value="0">All Color</option>'
+      +  '<option value="1">Dark blue</option>'
+      +  '<option value="2">Dark Green</option>'
+      +  '<option value="3">Dark purple</option>'
+      +  '<option value="4">Orange</option>'
+      +  '<option value="5">Blue</option>'
+      +  '<option value="6">Green</option>'
+      +  '<option value="7">Purple</option>'
+      +  '<option value="8">Red</option>'
+      +'</select>'
+
+      +'<select style="margin-top:20px;" id="select-eyes" onchange="fetchAllEggsFilter()">'
+      +  '<option selected value="0">Eyes</option>'
+      +  optionSelect
+      +'</select>'
+
+      +'<select style="margin-top:20px;" id="select-ears" onchange="fetchAllEggsFilter()">'
+      +  '<option selected value="0">Ears</option>'
+      +  optionSelect
+      +'</select>'
+
+      +'<select style="margin-top:20px;" id="select-horn" onchange="fetchAllEggsFilter()">'
+      +  '<option selected value="0">Horn</option>'
+      +  optionSelect
+      +'</select>'
+
+      +'<select style="margin-top:20px;" id="select-mouth" onchange="fetchAllEggsFilter()">'
+      +  '<option selected value="0">Mouth</option>'
+      +  optionSelect
+      +'</select>'
+
+      +'<select style="margin-top:20px;margin-bottom:20px;" id="page" onchange="fetchAllEggsFilter()">'
+      + '<option selected value="1">Page 1</option>'
+      +   renderPage(100)
+      +'</select>'
+    
+
+
+      + '</div>'
+      + '<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">'
+      + '<div class="row" id="render-eggs-all">';
+
+      fetch('http://localhost:3000/filterMystics', {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({"egg":true,"parts":{0:"0",1:"0",2:"0",3:"0",4:"0",5:undefined,"breedCountMin":0,"breedCountMax":0,"ageMinMonth":0,"ageMaxMonth":0},"page":1,"insell":1})
+        }).then(res => res.json())
+        .then(res => {
+          Object.keys(res).forEach((egg) => {//console.log(res)
+            renderEggs += renderEgg(egg,res[egg],ethereum.selectedAddress==res[egg].mystic.addr,ethereum.selectedAddress)
+          });
+          $(".modal-body").html(renderEggs+'</div></div>');
+        });
+        
+    }
+  }
+
+  function renderPage(nbr){
+    render = "";
+    for (let index = 2; index < (nbr/6)+2; index++) {
+      render += '<option value="'+index+'">Page '+index+'</option>';
+    }
+    return render;
+  }
+
+  function fetchAllEggsFilter(){
+    fetch('http://localhost:3000/filterMystics', {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({"egg":true,"parts":{0:$("#select-color").val(),1:$("#select-eyes").val(),2:$("#select-ears").val(),3:$("#select-horn").val(),4:$("#select-mouth").val(),5:undefined,"breedCountMin":0,"breedCountMax":0,"ageMinMonth":0,"ageMaxMonth":0},"page":$("#page").val(),"insell":$("#insell").val()})
+        }).then(res => res.json())
+        .then(res => {
+          renderEggs = '';
+          Object.keys(res).forEach((egg) => {console.log(res[egg])
+            renderEggs += renderEgg(egg,res[egg],ethereum.selectedAddress==res[egg].mystic.addr,ethereum.selectedAddress)
+          });
+          $("#render-eggs-all").html(renderEggs);
+        });
   }
 
   async function allItems(){
@@ -680,6 +845,25 @@ $("#title-mystic").fadeIn("fast", function() {
     }
   }
 
+  function setDefaut(egg){
+    let eggTreated = Object.assign({}, egg)
+    eggTreated["Disobedient"] = (12-egg.params8[1])*8
+    eggTreated["Aggressive"] = (12-egg.params8[2])*8
+    eggTreated["Gluttony"] = (12-egg.params8[3])*8
+    eggTreated["Lazy"] = (12-egg.params8[4])*8
+    //console.log(eggTreated)
+    return eggTreated
+
+  }
+
+  function renderDefaut(egg){
+    return "<span class='span-defaut'>Disobedient : "+((12-egg.params8[1])*8)+" %</span>"
+    +"<span class='span-defaut'>Aggressive : "+((12-egg.params8[2])*8)+" %</span>"
+    +"<span class='span-defaut'>Gluttony : "+((12-egg.params8[3])*8)+" %</span>"
+    +"<span class='span-defaut'>Lazy : "+((12-egg.params8[4])*8)+" %</span>"
+
+  }
+
   /**
    * Fonction permettant de faire le rendu html d'un mystic
    * @param {*} id 
@@ -688,7 +872,8 @@ $("#title-mystic").fadeIn("fast", function() {
    * @returns 
    */
   function renderEgg(id,data,owned,addr){
-    
+    console.log(data)
+    if(data.mystic)data = data.mystic.mystic;
     colorInt = parseInt(data["params8"][0]);
     if(colorInt == 0)color ="blue"
     if(colorInt == 1)color ="green"
@@ -717,15 +902,64 @@ $("#title-mystic").fadeIn("fast", function() {
           +'<img loading="lazy" src="'+type2+'" class="layer-egg" alt="mystic">'
           +'<img loading="lazy" src="'+type1+'" class="layer-egg" style="opacity:0.8;" alt="mystic">'
         +'</div>'
-        +"<div>"
+        +"<div style='width:100%;'>"
           +'<div class="content">'
-            +'<h3 class="title">'+(data.params256[7]==0?"Iconic Egg":(data.params256[7]==1?"Rare Egg":("Classic Egg")))+'</h3>'
-            +'<p class="copy">#'+id+'</p>'
-            +'<span>An egg that seems to be as soft as it is restless</span>'
+            +'<h3 class="title">'+(data.params256[7]==0?"Iconic Egg #"+id+"":(data.params256[7]==1?"Rare Egg #"+id+"":("Classic Egg #"+id+"")))+'</h3>'
+            //+'<span class="copy" style="opacity:0;">An egg that seems to be as soft as it is restless</span>'
+            +renderDefaut(data)
+            +'<div>'
+            +(owned?(data.inSell?'<button class="btn" style="margin-top:0px;" onclick="paramsNyxies('+id+','+false+','+data.egg+','+data.params256[2]+')">Stop sell</button>':'<button class="btn"  style="margin-top:0px;" onclick="paramsNyxies('+id+','+true+','+data.egg+','+data.params256[2]+')">Sell</button>'):'')
+            +(!owned&&data.inSell?'<button class="btn" style="margin-top:0px;" onclick="buy(`'+addr+'`,`'+dataStringified+'`,'+id+')">Buy</button>':'')
+            +'</div>'
           +'</div>'
         +'</div>'
       +'</div>'
     +'</div>'
+  }
+
+  async function paramsNyxies(id,sell,egg,invitationToReproduce){
+    let connected = await window.web3.eth.net.isListening();
+    if(connected == true){
+      let abi = await getAbi();
+      let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+      console.log(id,sell,egg,invitationToReproduce)
+      await contract.methods.paramsNyxies(id,sell,egg,invitationToReproduce).send({
+        from: ethereum.selectedAddress,
+        //gasPrice: '1000000000',//gwei 1
+        //gasPrice: '1',
+        //gas: 21000,
+        
+      }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
+        //renderGame()
+      });
+    }
+  }
+
+  async function buy(addrSeller,mystic,id){
+    let connected = await window.web3.eth.net.isListening();
+    if(connected == true){
+      let abi = await getAbi();
+      let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+      
+      let buyVar = await contract.methods.purchase(addrSeller,id).send({
+        from: ethereum.selectedAddress,
+        value:JSON.parse(mystic.replaceAll("%84", '\"')).params256[1],//web3.utils.toWei(JSON.parse(mystic.replaceAll("%84", '\"')).params256[1], "ether"),
+        to:ethereum.selectedAddress,
+        //gasPrice: '1',
+      }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
+        fetch('http://localhost:3000/buyOrTransfer', {
+            method: 'post',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "addrBuyer": ethereum.selectedAddress,"addrSeller": addrSeller})
+          }).then(res => res.json())
+            .then(res => {
+              renderGame()
+            });
+      });
+    }
   }
 
 
