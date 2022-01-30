@@ -61,7 +61,7 @@ contract DelegateContract is Ownable {
         return randomParams;
     }
 
-    function giveNyxie(uint8 typeMint, address to) public onlyOwner{
+    function giveNyxie(uint8 typeMint, address to) external onlyOwner{
         uint8 bonus = 0;
         uint256 price = 0;
         require(typeMint == 0 || typeMint == 1 || typeMint == 2,"Type not good");
@@ -84,7 +84,7 @@ contract DelegateContract is Ownable {
         contrat.mint(to, randomParts, randomParams);
     }
 
-    function mintDelegate(uint8 typeMint) public payable{
+    function mintDelegate(uint8 typeMint) external payable{
         uint8 bonus = 0;
         require(typeMint == 0 || typeMint == 1 || typeMint == 2,"Type not good");
         if(typeMint == 0){
@@ -108,13 +108,12 @@ contract DelegateContract is Ownable {
         uint256[] memory randomParams = randomParams256(msg.value,typeMint);
         paramsContract["nextId"]++;
 
-        //uint256 number = uint256(typeMint+1);
         TokenDelegable contrat = TokenDelegable(addressContract);
         contrat.mint(msg.sender, randomParts, randomParams);
     }
 
     
-    function paramsNyxies(uint256 tokenId,bool sellable,bool egg, uint256 tokenIdReproducable) public {
+    function paramsNyxies(uint256 tokenId,bool sellable,bool egg, uint256 tokenIdReproducable) external {
         
         TokenDelegable contrat = TokenDelegable(addressContract);
         TokenDelegable.Nyxies memory nyxiesTemp =  contrat.getTokenDetails(tokenId);
@@ -122,7 +121,6 @@ contract DelegateContract is Ownable {
         if(nyxiesTemp.egg != egg) nyxiesTemp.params256[0] = block.timestamp;
         nyxiesTemp.egg = egg;
         nyxiesTemp.params256[2] = tokenIdReproducable;
-
         contrat.updateToken(nyxiesTemp,tokenId,msg.sender);
     }
 
@@ -211,7 +209,7 @@ contract DelegateContract is Ownable {
         contrat.updateToken(nyxiesTwo,tokenIdTwo,senderInvit);
     }*/
 
-    function random(uint8 maxNumber) public returns (uint8) {
+    function random(uint8 maxNumber) internal returns (uint8) {
         uint256 randomnumber = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, paramsContract["nonce"]))) % maxNumber;
         paramsContract["nonce"]++;
         return uint8(randomnumber);
@@ -237,7 +235,7 @@ contract DelegateContract is Ownable {
 
 
 
-contract TokenDelegable is ERC721Enumerable, Ownable{
+contract TokenDelegable is ERC721Enumerable, Ownable {
     using Strings for uint256;
     
     struct Nyxies {
@@ -260,7 +258,15 @@ contract TokenDelegable is ERC721Enumerable, Ownable{
         setBaseURI(_initBaseURI);
     }
 
-    function multipleMintOwner(uint8 number) public onlyOwner{
+    function multipleMintOwner(uint8 number,uint8 typeMint,uint256 price) external onlyOwner {
+        uint8 bonus;
+         if(typeMint == 0){
+            bonus = 8;
+        }else if(typeMint == 1){
+            bonus = 4;
+        }else if(typeMint == 2){
+            bonus = 0;
+        }
         for(uint8 i = 0; i < number; i++){
             uint8[] memory params8 = new uint8[](6);
             params8[0] = random(4);//color
@@ -270,20 +276,21 @@ contract TokenDelegable is ERC721Enumerable, Ownable{
             params8[4] = random(4);//part4
             uint256[] memory params256 = new uint256[](10);
             params256[0] = block.timestamp;
-            params256[1] = 10000000000000000000;
+            params256[1] = price;
             params256[2] = 0;//idreproduce
             params256[3] = 0;//mother
             params256[4] = 0;//father
             params256[5] = 0;//nbrreproduce
             params256[6] = paramsContract["nextId"];//tokenId
-            params256[7] = 2;//type
+            params256[7] = typeMint;//type
             _tokenDetails[paramsContract["nextId"]] = Nyxies(false,true,params8,params256);
             _safeMint(msg.sender, paramsContract["nextId"]);
             paramsContract["nextId"]++;
+            paramsContract["nbrNyxies"]++;
         }
     }
 
-    function random(uint8 maxNumber) public returns (uint8) {
+    function random(uint8 maxNumber) internal returns (uint8) {
         uint256 randomnumber = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, paramsContract["nonce"]))) % maxNumber;
         paramsContract["nonce"]++;
         return uint8(randomnumber);
@@ -308,7 +315,7 @@ contract TokenDelegable is ERC721Enumerable, Ownable{
         _;
     }
 
-    function pause(bool _state) public onlyOwner {
+    function pause(bool _state) external onlyOwner {
         paused = _state;
     }
 
@@ -319,7 +326,7 @@ contract TokenDelegable is ERC721Enumerable, Ownable{
         paramsContract["nbrNyxies"]++;
     }
     
-    function burn(uint256 tokenId) public byDelegate {
+    function burn(uint256 tokenId) external byDelegate {
         _burn(tokenId);
         paramsContract["nbrNyxies"]--;
     }

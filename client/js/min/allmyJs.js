@@ -4,9 +4,9 @@
 //Mettre côter serveur, a récupérer avant tout autre choses avec un fetch puis lancer la function startMain
 const serverUrl = "https://9rotklamvhur.usemoralis.com:2053/server";
 const appId = "32qjS96gLON4ZUxrPSXbqM73w1h3HGDpFlbQ9tMM";
-const CONTRACT_ADDRESS = "0x389dD6AfDD717A0e2B76FF0Eda58b68aBc361a02";
+const CONTRACT_ADDRESS = "0x3ac4b0c407b3327FB714c53568531Ac39294C5d0";
 //DEV : 0x4EfC6600b04b14d786Fd0fc77790ca2f68335518
-//PROD : 0xaC84A40eC35f0ae77aD22A08E1E3c6D280644b5b
+//PROD : 0x3ac4b0c407b3327FB714c53568531Ac39294C5d0//0xaC84A40eC35f0ae77aD22A08E1E3c6D280644b5b//
 
 /**
  * VARIABLE ET CONSTANTE
@@ -102,9 +102,9 @@ function timeSince(date) {
   await Moralis.enableWeb3()
   window.web3 = new Web3(Moralis.provider)
   let connected = await window.web3.eth.net.isListening();
-  document.getElementById("btn-login").onclick = login;
+  //document.getElementById("btn-login").onclick = login;
   document.getElementById("btn-log-meta").onclick = login;
-  document.getElementById("btn-logout").onclick = logOut;
+  //document.getElementById("btn-logout").onclick = logOut;
 
     if(connected == true){
       web3.eth.getGasPrice().then((result) => {console.log(result)
@@ -372,44 +372,16 @@ function loadImage(src, onload) {
    */
   async function faq(){
       $(".modal-title").html("FAQ");
-      $(".modal-body").html(
-        '<div class="container mt-5">'
-        
-        +'<h4 class="mt-5">Can I earn money by playing ? : </h4>'
-        +'<p>Yes with the breeding system, however it will take time (one month minimum per reproduction) and each creature will be able to give only 3 eggs maximum, to limit the number of tokens.</p><br/>'
+      $.get('js/min/faq.html', function(data) {
+        $(".modal-body").html(data);
+      }); 
+  }
 
-        +'<h4 class="mt-5">How to buy NYXIES? : </h4>'
-        +'<p>You will need a <a href="https://metamask.io/download/">meta mask</a> account to start, then you will need to <a href="https://autofarm.gitbook.io/autofarm-network/how-tos/polygon-chain-matic/metamask-add-polygon-matic-network">add the polygon network</a>, and add MATIC crypto <a href="https://wallet.polygon.technology/gas-swap/">by converting your eth</a>, or your dollars, you will finally just click on the egg you want and then buy it</p><br/>'
-        
-        +'<h4 class="mt-5">Why Polygon Network ? : </h4>'
-        +'<p>Because it is ecological, economical, and simple to use, it may scare some at the installation, but this network is simple to use and you will gain a lot in gas costs, your MATIC will also be very easily convertible into ETH or other coin at very low cost.</p><br/>'
-        
-        +'<h4 class="mt-5">Can we buy more than one egg ? : </h4>'
-        +'<p>Yes, but you can only have one adult at a time, to control the speed of reproduction.</p><br/>'
-        
-        +'<h4 class="mt-5">Can we sell our eggs ? : </h4>'
-        +'<p>Yes at the minimum price or you will buy them, however this will be done only on our platform to avoid abuse.</p><br/>'
-
-        +'<h4 class="mt-5">Can my nft be lost permanently ? : </h4>'
-        +'<p>Yes, if you treat it badly, but it happens if you don\'t take care of it for several days.</p>'
-        +'<p>But a creature has also a limited lifespan, it will live several months, then die of old age, in this case your token is lost, you will have to have reproduced your creature before that happens not to have losses</p><br/>'
-
-        +'<h4 class="mt-5">How long will the game take me by day ? : </h4>'
-        +'<p>In general, the game will not take you more than 10 minutes per day, you can also put your account in vacation mode as many times as you want </p><br/>'
-
-        +'<h4 class="mt-5">How to add my nyxies balances to meta mask ? : </h4>'
-        +'<p>You just have to launch meta mask, click on "import tokens", then add the following contract address 0xfB68d56954f011C3Ea24691df9BEf073C8a78F51 , give it a name (NYXIES preferably) and a decimal ( 1 )</p><br/>'
-
-        
-        +'<h4 class="mt-5">Who are you ? : </h4>'
-        +'<p>We are a team of an experienced blockchain and smart contract backend developer, a web integrator, a graphic designer and a digital marketing professional, each with between three and seven years experience.</p>'
-        +'<a href="https://www.linkedin.com/in/kevin-dell-ova-270431184/">Dell\'Ova Kevin</a><br/>'
-        +'<a href="https://www.linkedin.com/in/florian-scouarnec-7829856a/">Florian Lescouarnec</a><br/>'
-        +'<a href="https://www.linkedin.com/in/vinibch/">Vincent Boucher</a><br/>'
-
-
-        +'</div>'
-      );
+  async function updates(){
+      $(".modal-title").html("UPDATES");
+      $.get('js/min/updates.html', function(data) {
+        $(".modal-body").html(data);
+      }); 
   }
   
   /**
