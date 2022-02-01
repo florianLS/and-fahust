@@ -13,6 +13,21 @@
   </head>
 
   <body style='background-color: black;background-image: url("img/ilu_bg.webp");background-size: cover;background-repeat: no-repeat;width:100%;height: 100vh;background-position: center;'>
+    <header id="header">
+      <div id="header-wrapper">
+        <!--<a href="#home"><img id="header-img" src="https://200degs.com/design/200degrees-logo.png" alt="200 Degrees Logo" /></a>-->
+      
+      <a id="burger"></a>
+      </div>
+      <nav id="nav-bar">
+        <ul>
+          <li><a class="nav-link" href="#content">Home</a></li>
+          <li><a class="nav-link" href="#egg-section">Eggs</a></li>
+          <li><a class="nav-link" href="#" data-toggle="modal" data-target="#Modal"  onclick="faq()">Faq</a></li>
+          <li><a class="nav-link" href="#" data-toggle="modal" data-target="#Modal"  onclick="updates()">Updates</a></li>
+        </ul>
+      </nav>
+     </header>
     <div id="hero">
       <div class="layer-bg layer" data-depth="0.00" data-type="parallax"></div>
       <div class="layer-1 layer" data-depth="0.10" data-type="parallax"></div>
@@ -54,13 +69,13 @@
     <div id="content">
       <div class="container">
         <section class="first-section">
-          <div class="row">
-            <div class="col-lg-6 col-md-12">
+          <div class="row first-fade">
+            <div class="col-lg-6 col-md-12" id="home">
               <h2>Tamable crypto <strong>nft</strong> creature</h2>
             </div>
           </div>
           <div class="row">
-            <div class="col-lg-6 col-md-12">
+            <div class="col-lg-6 col-md-12 first-fade">
               <p>Tame mystical creatures in a fantasy world and <strong>play to earn</strong>.</p>
                 
               <p>From the <strong>egg</strong> to adulthood to old age, take care of your creature, <strong>feed</strong> it, <strong>care</strong> for it, <strong>protect</strong> it.</p>
@@ -70,11 +85,12 @@
 
               <p>Each creature is unique and has a limited lifespan, which makes them very precious but also ephemeral, some of them have rare genetic peculiarities that you can with a little luck give to the children of your creature and thus share them with other users.</p>
 
-              <a href="#title-eggs">Buy an egg from now.</a>
+              <!--<a href="#egg-section">Buy an egg from now.</a>-->
+              <a href="#egg-section">Buy an egg very soon.</a>
             </div>
 
             
-            <div class="col-lg-6 col-md-12">
+            <div class="col-lg-6 col-md-12 second-fade">
               <div class="card card-first">
                 <div class="content">
                     <h3 class="title">Connect to meta-mask</h3>
@@ -83,7 +99,7 @@
               </div>
             </div>
 
-            <div class="col-12" style="max-width: 95%;">
+            <div class="col-12 third-fade" style="max-width: 95%;">
               <div class="flex-parent">
                 <div class="input-flex-container">
                   <div class="input" data-toggle="modal" data-target="#Modal"  onclick="updates()">
@@ -124,14 +140,14 @@
 
           
           
+          <div id="egg-section"></div>
+          <h3 id="title-eggs" class="fourth-fade">E G G S</h3>
 
-          <h3 id="title-eggs">E G G S</h3>
-
-          <article id="eggLayer"></article>
+          <article id="eggLayer" class="fourth-fade"></article>
           
 
           <canvas width="583" height="785" id="canvas" style="display:none"></canvas>
-          <div class="col-12">
+          <div class="col-12 fourth-fade">
             <p>165 000 unique eggs with 8 colors and 4 parts which will represent each a part of the body of your nyx after its hatching which will give you different malus and bonus.</p>
             <p>Each type of egg is part of the same intelligent contract, however they have different parameters that make them more or less rare.</p>
             <p>In games this will result in a different rendering for your creatures but also a different character, making your creatures more or less obedient, greedy, clean, putting you in front of some surprises.</p>
@@ -141,7 +157,7 @@
 
           </div>
 
-          <section class="page-content">
+          <section class="page-content five-fade">
             <div class="card card-second" id="test">
                 <div class="content">
                     <h3 class="title">Iconic Eggs</h3>
