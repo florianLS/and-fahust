@@ -118,9 +118,9 @@ function timeSince(date) {
         let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
         let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});
 
-        $(".iconic-egg-remain").html("Buy ( "+(eggOneRemain)+" / 1000 )")
-        $(".rare-egg-remain").html("Buy ( "+(eggTwoRemain)+" / 3000 )")
-        $(".classic-egg-remain").html("Buy ( "+(eggThreeRemain)+" / 6000 )")
+        $(".iconic-egg-remain").html("Soon ( "+(eggOneRemain)+" / 1000 )")
+        $(".rare-egg-remain").html("Soon ( "+(eggTwoRemain)+" / 3000 )")
+        $(".classic-egg-remain").html("Soon ( "+(eggThreeRemain)+" / 6000 )")
    }
 
 }
@@ -409,7 +409,7 @@ function loadImage(src, onload) {
 
   
 
-
+/*
   const headers = document.querySelectorAll('.highlight');
   const modal = document.querySelector('#aboutModal');
   // debounce function to limit function running to 1 time every 10ms. just copied directly from stackoverflow
@@ -431,10 +431,10 @@ function loadImage(src, onload) {
   // function that will make headers font-size increase when scrolled into view!
   function dynamicHeaders(e){
       headers.forEach(header => {
-  const totalScroll = (modal.scrollTop + window.innerHeight);
-  const inView = totalScroll > header.offsetTop;
-  const headerBottom = (header.offsetTop + header.clientHeight); 
-  const notScrolledPast = headerBottom < totalScroll;
+      const totalScroll = (modal.scrollTop + window.innerHeight);
+      const inView = totalScroll > header.offsetTop;
+      const headerBottom = (header.offsetTop + header.clientHeight); 
+      const notScrolledPast = headerBottom < totalScroll;
       if(inView){
       header.classList.add('fadeIntoView');	
       } else {
@@ -443,7 +443,7 @@ function loadImage(src, onload) {
       })
   };
 
-
+*/
 
 $(".convert-eth").each(function(){
     //console.log(($(this).data("price")))
@@ -462,28 +462,27 @@ $("#title-mystic").fadeIn("fast", function() {
    * Créer un mystic de façon aléatoire et l'envoyé vers le contrat intélligent
    */
   async function mint(typeMint) {
-    await Moralis.enableWeb3()
-    window.web3 = new Web3(Moralis.provider)
-    let connected = await window.web3.eth.net.isListening();
-    if(connected == true){
-      let abi = await getAbi();
-      let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
-      let price = 0;
-      if(typeMint==0)price = await contract.methods.getParamsContract("priceEggOne").call({from: ethereum.selectedAddress});
-      if(typeMint==1)price = await contract.methods.getParamsContract("priceEggTwo").call({from: ethereum.selectedAddress});
-      if(typeMint==2)price = await contract.methods.getParamsContract("priceEggThree").call({from: ethereum.selectedAddress});console.log(gasPriceNow)
-      let minted = await contract.methods.mintDelegate(typeMint).send({
-        from: ethereum.selectedAddress,
-        value:web3.utils.toWei(price, "wei"),
-        gasPrice: gasPriceNow,
-      }).catch((error)=>{console.log(error)}).then((success)=>{
+    // await Moralis.enableWeb3()
+    // window.web3 = new Web3(Moralis.provider)
+    // let connected = await window.web3.eth.net.isListening();
+    // if(connected == true){
+    //   let abi = await getAbi();
+    //   let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+    //   let price = 0;
+    //   if(typeMint==0)price = await contract.methods.getParamsContract("priceEggOne").call({from: ethereum.selectedAddress});
+    //   if(typeMint==1)price = await contract.methods.getParamsContract("priceEggTwo").call({from: ethereum.selectedAddress});
+    //   if(typeMint==2)price = await contract.methods.getParamsContract("priceEggThree").call({from: ethereum.selectedAddress});console.log(gasPriceNow)
+    //   let minted = await contract.methods.mintDelegate(typeMint).send({
+    //     from: ethereum.selectedAddress,
+    //     value:web3.utils.toWei(price, "wei"),
+    //     gasPrice: gasPriceNow,
+    //   }).catch((error)=>{console.log(error)}).then((success)=>{
 
-        mintMeta();
+    //     mintMeta();
         
-        console.log(success)
-      });
-    }
-    //renderGame();
+    //     console.log(success)
+    //   });
+    // }
   }
 
   async function mintMeta(){
@@ -556,9 +555,9 @@ $("#title-mystic").fadeIn("fast", function() {
       let eggTwoRemain = await contract.methods.getParamsContract("eggTwoRemain").call({from: ethereum.selectedAddress});
       let eggThreeRemain = await contract.methods.getParamsContract("eggThreeRemain").call({from: ethereum.selectedAddress});
 
-      $(".iconic-egg-remain").html("Buy ( "+(eggOneRemain)+" / 1000 )")
-      $(".rare-egg-remain").html("Buy ( "+(eggTwoRemain)+" / 3000 )")
-      $(".classic-egg-remain").html("Buy ( "+(eggThreeRemain)+" / 6000 )")
+      $(".iconic-egg-remain").html("Soon ( "+(eggOneRemain)+" / 1000 )")
+      $(".rare-egg-remain").html("Soon ( "+(eggTwoRemain)+" / 3000 )")
+      $(".classic-egg-remain").html("Soon ( "+(eggThreeRemain)+" / 6000 )")
 
       var lastMystic=undefined;
       var lastIdMystic=undefined;
@@ -670,10 +669,6 @@ $("#title-mystic").fadeIn("fast", function() {
       +  '<option value="12">Incredible</option>';
       renderEggs = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">'
 
-      /*+ '<label class="switch">'
-      +'<input type="checkbox">'
-      +'<span class="slider round"></span>'
-      +'</label>'*/
       
       +'<select style="margin-top:50px" id="insell" onchange="fetchAllEggsFilter()">'
       + '<option selected value="1">In sell</option>'
@@ -908,38 +903,38 @@ $("#title-mystic").fadeIn("fast", function() {
   }
 
   async function buy(addrSeller,mystic,id){
-    let connected = await window.web3.eth.net.isListening();
-    if(connected == true){
-      let abi = await getAbi();
-      let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+    // let connected = await window.web3.eth.net.isListening();
+    // if(connected == true){
+    //   let abi = await getAbi();
+    //   let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
       
-      let buyVar = await contract.methods.purchase(addrSeller,id).send({
-        from: ethereum.selectedAddress,
-        value:JSON.parse(mystic.replaceAll("%84", '\"')).params256[1],//web3.utils.toWei(JSON.parse(mystic.replaceAll("%84", '\"')).params256[1], "ether"),
-        to:ethereum.selectedAddress,
-        //gasPrice: '1',
-      }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
-        fetch('http://localhost:3000/buyOrTransfer', {
-            method: 'post',
-            headers: {
-              'Accept': 'application/json, text/plain, */*',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ "addrBuyer": ethereum.selectedAddress,"addrSeller": addrSeller})
-          }).then(res => res.json())
-            .then(res => {
-              renderGame()
-            });
-      });
-    }
+    //   let buyVar = await contract.methods.purchase(addrSeller,id).send({
+    //     from: ethereum.selectedAddress,
+    //     value:JSON.parse(mystic.replaceAll("%84", '\"')).params256[1],//web3.utils.toWei(JSON.parse(mystic.replaceAll("%84", '\"')).params256[1], "ether"),
+    //     to:ethereum.selectedAddress,
+    //     //gasPrice: '1',
+    //   }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
+    //     fetch('http://localhost:3000/buyOrTransfer', {
+    //         method: 'post',
+    //         headers: {
+    //           'Accept': 'application/json, text/plain, */*',
+    //           'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ "addrBuyer": ethereum.selectedAddress,"addrSeller": addrSeller})
+    //       }).then(res => res.json())
+    //         .then(res => {
+    //           renderGame()
+    //         });
+    //   });
+    // }
   }
 
 
+  var depth, layer, layers, movement, topDistance, translate3d, _i, _len;
+  layers = document.querySelectorAll("[data-type='parallax']");
   (function() {
     window.addEventListener('scroll', function(event) {
-      var depth, layer, layers, movement, topDistance, translate3d, _i, _len;
       topDistance = this.pageYOffset;
-      layers = document.querySelectorAll("[data-type='parallax']");
       for (_i = 0, _len = layers.length; _i < _len; _i++) {
         layer = layers[_i];
         depth = layer.getAttribute('data-depth');
@@ -951,7 +946,28 @@ $("#title-mystic").fadeIn("fast", function() {
         layer.style['-o-transform'] = translate3d;
         layer.style.transform = translate3d;
       }
-    });
+      document.body.classList[
+          window.scrollY > 600 ? 'add': 'remove'
+      ]('scrolled');
+    }, {
+      capture: true,
+      passive: true
+    })
   
   }).call(this);
 
+
+  $("#burger, nav ul li").on("click", function(){
+    $("#header-wrapper").toggleClass("open");
+    $("nav ul").toggleClass("open");
+  });
+  
+  
+  
+  
+  
+  window.addEventListener('load', function () {
+    document.body.classList[
+        window.scrollY > 600 ? 'add': 'remove'
+    ]('scrolled');
+  });
