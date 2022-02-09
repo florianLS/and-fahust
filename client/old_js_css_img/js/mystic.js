@@ -210,7 +210,7 @@ $("#title-mystic").fadeIn("slow", function() {
   function allMystics(){
     $("#myMystics").fadeOut("slow").fadeIn("slow")
     $("#myEggs").fadeOut("slow")
-    fetch('http://localhost:3000/getAllMystics', {
+    fetch('https://localhost:31093/getAllMystics', {
     method: 'get',
     headers: {
       'Accept': 'application/json, text/plain, */*',
@@ -235,7 +235,7 @@ $("#title-mystic").fadeIn("slow", function() {
     if(connected == true){
       $('#myInvitsSended').fadeOut("slow");
       if(mystic){
-        fetch('http://localhost:3000/mint', {
+        fetch('https://localhost:31093/mint', {
           method: 'post',
           headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -285,7 +285,7 @@ $("#title-mystic").fadeIn("slow", function() {
   //     let abi = await getAbi();
   //     let contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);//0x400919F8f5740436d1A1769bC241477275C61545
   //     let transfer = await contract.methods.purchaseAndTransfer(ethereum.selectedAddress,myMysticId,false).send({from: ethereum.selectedAddress, gasPrice: '1',}).catch((error)=>{console.log('error transfer',error)}).then(()=>{
-  //       fetch('http://localhost:3000/buyOrTransfer', {
+  //       fetch('https://localhost:31093/buyOrTransfer', {
   //           method: 'post',
   //           headers: {
   //             'Accept': 'application/json, text/plain, */*',
@@ -314,7 +314,7 @@ $("#title-mystic").fadeIn("slow", function() {
         to:ethereum.selectedAddress,
         gasPrice: '1',
       }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
-        fetch('http://localhost:3000/buyOrTransfer', {
+        fetch('https://localhost:31093/buyOrTransfer', {
             method: 'post',
             headers: {
               'Accept': 'application/json, text/plain, */*',
@@ -520,7 +520,7 @@ $("#title-mystic").fadeIn("slow", function() {
   async function feed(food){console.log('feed')
     let connected = await window.web3.eth.net.isListening();
     if(connected == true){
-      fetch('http://localhost:3000/feed', {
+      fetch('https://localhost:31093/feed', {
         method: 'post',
         headers: {
           'Accept': 'application/json, text/plain, */*',
@@ -542,7 +542,7 @@ $("#title-mystic").fadeIn("slow", function() {
   async function action(actionId){
     let connected = await window.web3.eth.net.isListening();
     if(connected == true){
-      fetch('http://localhost:3000/action', {
+      fetch('https://localhost:31093/action', {
         method: 'post',
         headers: {
           'Accept': 'application/json, text/plain, */*',
@@ -557,7 +557,7 @@ $("#title-mystic").fadeIn("slow", function() {
   }
 
   function pickFood(name,value,foodId){
-    fetch('http://localhost:3000/pickFood', {
+    fetch('https://localhost:31093/pickFood', {
       method: 'post',
       headers: {
         'Accept': 'application/json, text/plain, */*',

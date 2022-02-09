@@ -4,7 +4,7 @@
    */
    function reproduce(idTokenOne,idTokenTwo,addressTwo){
     getAbi().then((abi)=>{
-      fetch('http://localhost:3000/acceptInvit', {
+      fetch('https://localhost:31093/acceptInvit', {
         method: 'post',
         headers: {
           'Accept': 'application/json, text/plain, */*',
@@ -87,7 +87,7 @@
           from: ethereum.selectedAddress,
         }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
 
-          fetch('http://localhost:3000/addInvit', {
+          fetch('https://localhost:31093/addInvit', {
             method: 'post',
             headers: {
               'Accept': 'application/json, text/plain, */*',
@@ -117,7 +117,7 @@
           gasPrice: '1',
         }).catch((error)=>{console.log('error transfer',error)}).then((invit)=>{
 
-          fetch('http://localhost:3000/deleteInvitSended', {
+          fetch('https://localhost:31093/deleteInvitSended', {
             method: 'post',
             headers: {
               'Accept': 'application/json, text/plain, */*',
@@ -144,7 +144,7 @@
         from: ethereum.selectedAddress,
         gasPrice: '1',
       }).catch((error)=>{console.log('error transfer',error)}).then((invit)=>{*/
-        fetch('http://localhost:3000/deleteInvitReceive', {
+        fetch('https://localhost:31093/deleteInvitReceive', {
           method: 'post',
           headers: {
             'Accept': 'application/json, text/plain, */*',

@@ -9,7 +9,8 @@ html {
 	font-family: sans-serif;
 	line-height: 1.15;
 	-webkit-text-size-adjust: 100%;
-	-webkit-tap-highlight-color: transparent
+	-webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
 }
 
 article,
@@ -3487,6 +3488,7 @@ a.text-dark:hover {
   width: 100%;
   height: 100%;
 }
+@media only screen and (min-width: 1200px){
 #stars {
   width: 1px;
   height: 1px;
@@ -3598,6 +3600,8 @@ a.text-dark:hover {
   to {
     transform: translateY(-2000px);
   }
+}
+
 }
 
 
@@ -3990,7 +3994,7 @@ p {
 #hero, .layer {
     min-height: 700px;
 }
-.layer-bg {
+/*.layer-bg {
     background-image: url("../img/ilu_bg.webp");
 }
 .layer-1 {
@@ -4003,15 +4007,16 @@ background-repeat: no-repeat;
 }
 .layer-3 {
     background-position: right bottom;
-}
+}*/
 .layer-4 {
+    margin-top:-200px;
     background-position: bottom center;
     background-size: cover;
     background-repeat: no-repeat;
     width: 100%;
-    height: 700px;
+    height: 200px;
     position: absolute;
-    z-index: -1;
+    z-index: 99;
     background-image: url("../img/ilu_01.webp");
 }
 .tutorial-link {
@@ -4224,6 +4229,7 @@ background-repeat: no-repeat;
     height:100%;
     overflow-y: auto;
     perspective: 200px; 
+    pointer-events: none;
   }
 
   footer{
@@ -4411,10 +4417,10 @@ background-repeat: no-repeat;
         height:250px;
         transform-origin: bottom right ;
         
-        -webkit-transition: all 0.5s ease-in-out;
-        -moz-transition: all 0.5s ease-in-out;
-        -o-transition: all 0.5s ease-in-out;
-        transition: all 0.5s ease-in-out;
+        -webkit-transition: all 1s ease-in-out;
+        -moz-transition: all 1s ease-in-out;
+        -o-transition: all 1s ease-in-out;
+        transition: all 1s ease-in-out;
     }
 
 
@@ -4683,4 +4689,459 @@ background-repeat: no-repeat;
   
   
   }
+
+  .balance-anim{
+      /*display:"none";*/
+    animation-name: cloche;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;    
+    animation-play-state: running;
+    transform-origin: bottom ;
+        
+    -webkit-transition: all 3s ease-in-out;
+    -moz-transition: all 3s ease-in-out;
+    -o-transition: all 3s ease-in-out;
+    transition: all 3s ease-in-out;
+  }
   
+  @media only screen and (min-width: 1200px){
+      
+    /*body, html{
+        margin:0;
+        padding:0;
+        position:fixed
+    }*/
+
+  .body-anime{
+    margin:0;height: 100vh;width: 100vw;overflow: hidden;position: absolute;
+    pointer-events: none;
+  }
+
+  .background-static{
+    background-size: 30%;
+    background-image: url("img/game/backgroundstatic.png");
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: #333;
+    margin: 0; 
+    padding: 0;
+    pointer-events: none;
+  }
+
+  .first-background-dynamic{
+    top:-30vh;right:0vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .second-background-dynamic{
+    top:-30vh;right:30vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .third-background-dynamic{
+    top:-30vh;right:65vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .second-plan{
+    top:-20vh;left:-10vw;position:absolute;width:110vw;overflow: hidden;
+    pointer-events: none;
+  }
+
+  .pik1{
+    bottom:7vh;left:5vw;position:absolute;
+    filter: drop-shadow(5px 5px 5px #000);
+    pointer-events: none;
+  }
+
+  .pik2{
+    bottom:10vh;right:15vw;position:absolute;
+    filter: drop-shadow(5px 5px 5px #000);
+    pointer-events: none;
+  }
+      
+  .champi1{
+      bottom:42vh;left:46vw;position:absolute;
+      filter: drop-shadow(5px 5px 5px #000);
+      pointer-events: auto;
+      transition: all 1s ;
+      z-index: 1000;
+  }
+  
+  .champi2{
+      bottom:32vh;left:28vw;position:absolute;
+      filter: drop-shadow(5px 5px 5px #000);
+      pointer-events: auto;
+      transition: all 1s ;
+      z-index: 1000;
+  }
+      
+  .champi3{
+      bottom:16vh;right:21vw;position:absolute;
+      filter: drop-shadow(5px 5px 5px #000);
+      pointer-events: auto;
+      transition: all 1s ;
+      z-index: 1000;
+  }
+  
+  .plant1{
+      bottom:36vh;left:38vw;position:absolute;
+      filter: drop-shadow(5px 5px 5px #000);
+      pointer-events: none;
+  }
+  
+  .plant2{
+      bottom:14vh;left:14vw;position:absolute;
+      filter: drop-shadow(5px 5px 5px #000);
+      pointer-events: none;
+  }
+  
+  .plant3{
+      bottom:11vh;left:55vw;position:absolute;
+      filter: drop-shadow(5px 5px 5px #000);
+      pointer-events: none;
+  }
+  
+  .plant4{
+      bottom:11vh;right:17vw;position:absolute;
+      filter: drop-shadow(5px 5px 5px #000);
+      pointer-events: none;
+  }
+
+  .first-plan{
+    top:-20vh;left:-10vw;position:absolute;width:110vw;overflow: hidden;
+    pointer-events: none;
+  }
+
+  .egg-game-one{
+    bottom:35vh;left:40vw;position:absolute;
+    pointer-events: none;
+    
+  }
+
+  .egg-game-two{
+    bottom:40vh;left:50vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .egg-game-three{
+    bottom:37vh;left:60vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .trees1{
+    bottom:-10vh;left:-10vw;position:absolute;
+    filter: drop-shadow(5px 5px 5px #000);
+    pointer-events: none;
+  }
+
+  .trees2{
+    bottom:-10vh;right:-10vw;position:absolute;
+    filter: drop-shadow(5px 5px 5px #000);
+    pointer-events: none;
+  }
+
+  .foreground-dynamic-5{
+    bottom:-5vh;position:absolute;
+    pointer-events: none;
+  }
+
+  .foreground-dynamic-2{
+    bottom:-30vh;left:15vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .foreground-dynamic-5-2{
+    bottom:-10vh;left:40vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .foreground-dynamic-2-2{
+    bottom:-20vh;right:-10vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .foreground-dynamic-5-3{
+    bottom:-5vh;left:60vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .foreground-dynamic-4{
+    top:-10vh;left:-10vw;position:absolute;
+    pointer-events: none;
+  }
+
+  .foreground-dynamic-3{
+    top:-10vh;left:0;right:0;position:absolute;
+    pointer-events: none;
+  }
+    
+  .foreground-static{
+    bottom:0vh;left:0;right:0;position:absolute;width:100vw;overflow: hidden;
+    pointer-events: none;
+  }
+
+
+
+
+
+
+}
+
+
+
+
+
+.ag-format-container {
+    width: 1142px;
+    margin: 0 auto;
+  }
+  
+  
+  .ag-leaf-block {
+    overflow: hidden;
+    position: relative;
+  }
+  
+  #js-ag-leaf_box {
+      z-index: 999;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .js-ag-leaf {
+      top:-100vh;
+    z-index: 999;
+    height: 25px;
+    width: 31px;
+    background: url(https://raw.githubusercontent.com/SochavaAG/example-mycode/master/pens/animation-leaf/images/leaf.png);
+  
+    position: absolute;
+  }
+  
+  
+  @media only screen and (max-width: 767px) {
+    .ag-format-container {
+      width: 96%;
+    }
+  
+  }
+  
+  @media only screen and (max-width: 639px) {
+  
+  }
+  
+  @media only screen and (max-width: 479px) {
+  
+  }
+  
+  @media (min-width: 768px) and (max-width: 979px) {
+    .ag-format-container {
+      width: 750px;
+    }
+  
+  }
+  
+  @media (min-width: 980px) and (max-width: 1161px) {
+    .ag-format-container {
+      width: 960px;
+    }
+  
+  }
+  
+
+
+
+
+  @media only screen and (max-width: 1200px){
+
+    /*body, html{
+        margin:0;
+        padding:0;
+        position:fixed
+    }*/
+
+    .body-anime{
+        margin:0;height: 100vh;width: 100vw;position: absolute;
+        pointer-events: none;/*overflow: hidden;*/
+      }
+    
+      .background-static{
+        background-size: cover;
+        height: 100vh;
+        width: 100vw;
+        /*overflow: hidden;*/
+        background-color: #333;
+        margin: 0; 
+        padding: 0;
+        pointer-events: none;
+      }
+    
+      .first-background-dynamic{
+        top:-30vh;right:0vw;position:absolute;visibility: hidden;
+        pointer-events: none;
+      }
+    
+      .second-background-dynamic{
+        top:-30vh;right:30vw;position:absolute;visibility: hidden;
+        pointer-events: none;
+      }
+    
+      .third-background-dynamic{
+        top:-30vh;right:65vw;position:absolute;visibility: hidden;
+        pointer-events: none;
+      }
+    
+      .second-plan{
+        bottom:5vh;left:-50vw;position:absolute;
+        pointer-events: none;
+      }
+      
+      .champi1{
+          bottom:42vh;left:2vw;position:absolute;
+          filter: drop-shadow(5px 5px 5px #000);
+          pointer-events: auto;
+      }
+      
+      .champi2{
+          bottom:28vh;left:8vw;position:absolute;
+          filter: drop-shadow(5px 5px 5px #000);
+          pointer-events: auto;
+      }
+          
+      .champi3{
+          bottom:26vh;right:18vw;position:absolute;
+          filter: drop-shadow(5px 5px 5px #000);
+          pointer-events: auto;
+      }
+      
+      .plant1{
+          bottom:26vh;left:28vw;position:absolute;
+          filter: drop-shadow(5px 5px 5px #000);
+          pointer-events: none;
+      }
+      
+      .plant2{
+          bottom:38vh;left:44vw;position:absolute;
+          filter: drop-shadow(5px 5px 5px #000);
+          pointer-events: none;
+      }
+      
+      .plant3{
+          bottom:41vh;left:55vw;position:absolute;
+          filter: drop-shadow(5px 5px 5px #000);
+          pointer-events: none;
+      }
+      
+      .plant4{
+          bottom:11vh;right:11vw;position:absolute;
+          filter: drop-shadow(5px 5px 5px #000);
+          pointer-events: none;
+      }
+    
+      .pik1{
+        bottom:29vh;left:-25vw;position:absolute;
+        filter: drop-shadow(5px 5px 5px #000);
+        pointer-events: none;
+      }
+    
+      .pik2{
+        bottom:16vh;right:15vw;position:absolute;visibility: hidden;
+        filter: drop-shadow(5px 5px 5px #000);
+        pointer-events: none;
+      }
+    
+      .first-plan{
+        bottom:5vh;left:-50vw;position:absolute;
+        pointer-events: none;
+      }
+    
+      .egg-game-one{
+        bottom:25vh;left:30vw;position:absolute;
+        pointer-events: none;
+      }
+    
+      .egg-game-two{
+        bottom:30vh;left:50vw;position:absolute;
+        pointer-events: none;
+      }
+    
+      .egg-game-three{
+        bottom:27vh;right:30vw;position:absolute;
+        pointer-events: none;
+      }
+    
+      .trees1{
+        bottom:15vh;left:-65vw;position:absolute;visibility: hidden;
+        filter: drop-shadow(5px 5px 5px #000);
+        pointer-events: none;
+      }
+    
+      .trees2{
+        bottom:15vh;right:-75vw;position:absolute;
+        filter: drop-shadow(5px 5px 5px #000);
+        pointer-events: none;
+      }
+    
+      .foreground-dynamic-5{
+        bottom:-10vh;position:absolute;
+        pointer-events: none;
+      }
+    
+      .foreground-dynamic-2{
+        bottom:-10vh;left:15vw;position:absolute;visibility: hidden;
+        pointer-events: none;
+      }
+    
+      .foreground-dynamic-5-2{
+        bottom:-10vh;left:40vw;position:absolute;
+        pointer-events: none;
+      }
+    
+      .foreground-dynamic-2-2{
+        bottom:-10vh;right:-10vw;position:absolute;visibility: hidden;
+        pointer-events: none;
+      }
+    
+      .foreground-dynamic-5-3{
+        bottom:3vh;left:60vw;position:absolute;visibility: hidden;
+        pointer-events: none;
+      }
+    
+      .foreground-dynamic-4{
+        top:-30vh;left:-50vw;position:absolute;visibility: hidden;
+        pointer-events: none;
+      }
+    
+      .foreground-dynamic-3{
+        top:-50vh;left:-50;right:0;position:absolute;visibility: hidden;
+        pointer-events: none;
+      }
+    
+      .foreground-static{
+        bottom:0vh;left:0;right:0;position:absolute;
+        pointer-events: none;
+      }
+  }
+
+    .champi1:hover{
+        filter: drop-shadow(20px 20px 20px #DAEB44);
+        cursor: grab;
+    }
+    .champi2:hover{
+        filter: drop-shadow(20px 20px 20px #DAEB44);
+        cursor: grab;
+    }
+    .champi3:hover{
+        filter: drop-shadow(20px 20px 20px #DAEB44);
+        cursor: grab;
+    }
+
+  
+
+  #contentBody:hover{
+    cursor: grab;
+  }

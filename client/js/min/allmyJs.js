@@ -163,17 +163,18 @@ function eggRenderImg(type){
   setInterval(() => {
       var slides = document.getElementsByClassName("eggLayer");
       for (var i = 0; i < slides.length; i++) {
-          
-          var div = slides[i],
-              deg = rotated ? -randRang(0,6) : randRang(0,6);
-      
-          div.style.webkitTransform = 'rotate('+deg+'deg)'; 
-          div.style.mozTransform    = 'rotate('+deg+'deg)'; 
-          div.style.msTransform     = 'rotate('+deg+'deg)'; 
-          div.style.oTransform      = 'rotate('+deg+'deg)'; 
-          div.style.transform       = 'rotate('+deg+'deg)'; 
-      
-          rotated = !rotated;
+          if(window.scrollY > 600){
+            var div = slides[i],
+                deg = rotated ? -randRang(0,6) : randRang(0,6);
+        
+            div.style.webkitTransform = 'rotate('+deg+'deg)'; 
+            div.style.mozTransform    = 'rotate('+deg+'deg)'; 
+            div.style.msTransform     = 'rotate('+deg+'deg)'; 
+            div.style.oTransform      = 'rotate('+deg+'deg)'; 
+            div.style.transform       = 'rotate('+deg+'deg)'; 
+        
+            rotated = !rotated;
+          }
       }
   }, randRang(2000,4900));
 
@@ -618,7 +619,7 @@ $("#title-mystic").fadeIn("fast", function() {
     let connected = await window.web3.eth.net.isListening();
     if(connected == true){
         //console.log({ "addr": ethereum.selectedAddress, "mystic": {createdAt:mystic.params256[0],invitsSended:mystic.params256[2],numberReproduce:mystic.params256[5],parts:mystic.params8,price:mystic.params256[1],id:mystic.params256[6],egg:mystic.egg,inSell:mystic.inSell}})
-        fetch('http://localhost:3000/mintEgg', {
+        fetch('https://localhost:31093/mintEgg', {
           method: 'post',
           headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -718,7 +719,7 @@ $("#title-mystic").fadeIn("fast", function() {
       + '<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">'
       + '<div class="row" id="render-eggs-all">';
 
-      fetch('http://localhost:3000/filterMystics', {
+      fetch('https://localhost:31093/filterMystics', {
           method: 'post',
           headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -745,7 +746,7 @@ $("#title-mystic").fadeIn("fast", function() {
   }
 
   function fetchAllEggsFilter(){
-    fetch('http://localhost:3000/filterMystics', {
+    fetch('https://localhost:31093/filterMystics', {
           method: 'post',
           headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -782,7 +783,7 @@ $("#title-mystic").fadeIn("fast", function() {
   function allMystics(){
     $("#myMystics").fadeOut("slow").fadeIn("fast")
     $("#myEggs").fadeOut("fast")
-    fetch('http://localhost:3000/getAllMystics', {
+    fetch('https://localhost:31093/getAllMystics', {
     method: 'get',
     headers: {
       'Accept': 'application/json, text/plain, */*',
@@ -914,7 +915,7 @@ $("#title-mystic").fadeIn("fast", function() {
     //     to:ethereum.selectedAddress,
     //     //gasPrice: '1',
     //   }).catch((error)=>{console.log('error transfer',error)}).then(()=>{
-    //     fetch('http://localhost:3000/buyOrTransfer', {
+    //     fetch('https://localhost:31093/buyOrTransfer', {
     //         method: 'post',
     //         headers: {
     //           'Accept': 'application/json, text/plain, */*',
@@ -931,11 +932,11 @@ $("#title-mystic").fadeIn("fast", function() {
 
 
   var depth, layer, layers, movement, topDistance, translate3d, _i, _len;
-  layers = document.querySelectorAll("[data-type='parallax']");
+  //layers = document.querySelectorAll("[data-type='parallax']");
   (function() {
     window.addEventListener('scroll', function(event) {
       topDistance = this.pageYOffset;
-      for (_i = 0, _len = layers.length; _i < _len; _i++) {
+      /*for (_i = 0, _len = layers.length; _i < _len; _i++) {
         layer = layers[_i];
         depth = layer.getAttribute('data-depth');
         movement = -(topDistance * depth);
@@ -945,7 +946,7 @@ $("#title-mystic").fadeIn("fast", function() {
         layer.style['-ms-transform'] = translate3d;
         layer.style['-o-transform'] = translate3d;
         layer.style.transform = translate3d;
-      }
+      }*/
       document.body.classList[
           window.scrollY > 600 ? 'add': 'remove'
       ]('scrolled');
@@ -971,3 +972,89 @@ $("#title-mystic").fadeIn("fast", function() {
         window.scrollY > 600 ? 'add': 'remove'
     ]('scrolled');
   });
+
+/*
+  var rotated = 0;
+  setInterval(() => {
+      var slides = document.getElementsByClassName("balance-anim");
+      for (var i = 0; i < slides.length; i++) {
+          
+          var div = slides[i],
+              deg = rotated ? -randRang(0,6) : randRang(0,6);
+      
+          div.style.webkitTransform = 'rotate('+deg+'deg)'; 
+          div.style.mozTransform    = 'rotate('+deg+'deg)'; 
+          div.style.msTransform     = 'rotate('+deg+'deg)'; 
+          div.style.oTransform      = 'rotate('+deg+'deg)'; 
+          div.style.transform       = 'rotate('+deg+'deg)'; 
+      
+          rotated = !rotated;
+      }
+  }, randRang(2000,4900));*/
+
+  
+  var rotated = 0;
+  setInterval(() => {
+      var slides = document.getElementsByClassName("balance-anim");
+      for (var i = 0; i < slides.length; i++) {
+          if(randRang(1,10)<2 && (slides[i].dataset.mobile == "true" || window.screen.width >= 1200) && window.scrollY < 600){
+            var div = slides[i],
+                deg = rotated ? -randRang(0,4) : randRang(0,4),
+                dataDeg = parseInt(slides[i].dataset.deg);
+            div.style.webkitTransform = 'rotate('+(deg*dataDeg)+'deg)'; 
+            div.style.mozTransform    = 'rotate('+(deg*dataDeg)+'deg)'; 
+            div.style.msTransform     = 'rotate('+(deg*dataDeg)+'deg)'; 
+            div.style.oTransform      = 'rotate('+(deg*dataDeg)+'deg)'; 
+            div.style.transform       = 'rotate('+(deg*dataDeg)+'deg)'; 
+        
+            rotated = !rotated;
+          }
+      }
+  }, window.screen.width>=1200 ?100:500);
+
+
+  (function ($) {
+    $(function () {
+  
+  
+      var e = document.getElementById('js-ag-leaf_box'),
+        t = window.innerWidth,
+        a = 2 * window.innerHeight;
+      if(!$("#Modal").hasClass("show")){
+        for (i = 0; i < 20; i++) {
+          var n = document.createElement('span');
+          n.classList.add('js-ag-leaf');
+    
+          TweenLite.set(n, {x: fnRandom(0, 2), y: fnRandom(8, a), z: fnRandom(-200, 200)}), e.appendChild(n), r(n);
+        }
+      }
+  
+      function r(e) {
+        TweenMax.to(e, fnRandom(8, 15), {
+          x: t + 100,
+          ease: Linear.easeNone,
+          repeat: -1,
+          delay: -15
+        }), TweenMax.to(e, fnRandom(4, 2), {
+          y: "+=100",
+          rotationZ: fnRandom(0, 180),
+          repeat: -1,
+          yoyo: true,
+          ease: Sine.easeInOut
+        }), TweenMax.to(e, fnRandom(2, 2), {
+          rotationX: fnRandom(0, 360),
+          rotationY: fnRandom(0, 360),
+          repeat: -1,
+          yoyo: true,
+          ease: Sine.easeInOut,
+          delay: -5
+        })
+      }
+  
+      function fnRandom(e, t) {
+        return e + Math.random() * (t - e);
+      }
+  
+  
+    });
+  })(jQuery);
